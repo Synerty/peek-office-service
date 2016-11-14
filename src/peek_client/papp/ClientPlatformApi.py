@@ -1,0 +1,2 @@
+class ClientPlatformApi:
+    pass
