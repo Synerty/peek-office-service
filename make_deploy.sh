@@ -40,7 +40,7 @@ cp -pr jsoncfg/src/jsoncfg $DIR
 
 # Init scripts, etc
 cp -p  peek_client/init/peek_client.init.rhel.sh $DIR
-cp -p  peek_client/init/run_peek_client.sh $DIR
+cp -p  peek_client/init/peek_client.init.deb.sh $DIR
 
 # Remove unneeded RapUI components
 rm -rf $DIR/rapui/bower_components
