@@ -1,35 +1,35 @@
 #!/bin/sh
 #
-# peek_client_pof Peek Client for PowerOn Fusion
+# Peek - Extensible Model Viewer
 #
 # chkconfig:   2345 20 80
-# description: Peek Client for PowerOn Fusion
+# description: Peek - Extensible Model Viewer
 #
 
 ### BEGIN INIT INFO
-# Provides: peek_client_pof
-# Required-Start:
-# Required-Stop:
+# Provides: peek_client
+# Required-Start: sshd postgresql
+# Required-Stop: sshd postgresql
 # Should-Start:
 # Should-Stop:
 # Default-Start: 3 4 5
 # Default-Stop: 0 1 2 6
-# Short-Description: Peek Client for PowerOn Fusion
-# Description: Peek Client for PowerOn Fusion
+# Short-Description: Peek - Extensible Model Viewer
+# Description: Peek - Extensible Model Viewer
 ### END INIT INFO
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-HOME=/users/enmac
-DIR=${HOME}/peek_client_pof
-DAEMON_NAME=peek_client_pof
-DAEMON_USER=enmac
-
-LAUNCHER="$DIR/run_peek_client.sh"
+HOME=/home/peek
+DIR=${HOME}/peek
+DAEMON="$DIR/run_peek_client.pyc"
+DAEMON_NAME=peek
+DAEMON_USER=peek
+PYTHON=${HOME}/python/bin/python
 
 # Change the next 3 lines to suit where you install your script and what you want to call it
-exec="$DIR/run_peek_client.pyc"
+exec="$DAEMON"
 prog="$DAEMON_NAME"
 
 
@@ -37,10 +37,14 @@ prog="$DAEMON_NAME"
 
 lockfile=/var/lock/subsys/$prog
 
+# Add the python paths
+export PYTHONPATH=$DIR
+export PATH=${HOME}/python/bin:$PATH
+
 start() {
     echo -n $"Starting $prog: "
     # if not running, start it up here, usually something like "daemon $exec"
-    su - $DAEMON_USER -c "$LAUNCHER" && success || failure
+    su - $DAEMON_USER -c "$PYTHON $DAEMON >> $HOME/peek_client.log 2>&1 &" && success || failure
 
     retval=$?
     echo
@@ -51,7 +55,7 @@ start() {
 stop() {
     echo -n $"Stopping $prog: "
     # stop it here, often "killproc $prog"
-    pkill -9 -f ${exec} && success || failure
+    killproc $PYTHON
     retval=$?
     echo
     [ $retval -eq 0 ] && rm -f $lockfile
@@ -65,13 +69,7 @@ restart() {
 
 rh_status() {
     # run checks to determine if the service is running or use generic status
-    if pgrep -lf ${exec}; then
-        echo "$prog is running"
-        true
-    else
-        echo "$prog is stopped"
-        false
-    fi
+    status $prog
 }
 
 rh_status_q() {
