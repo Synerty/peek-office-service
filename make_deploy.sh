@@ -42,9 +42,6 @@ cp -pr jsoncfg/src/jsoncfg $DIR
 cp -p  peek_client/init/peek_client.init.rhel.sh $DIR
 cp -p  peek_client/init/peek_client.init.deb.sh $DIR
 
-# Remove unneeded RapUI components
-rm -rf $DIR/rapui/bower_components
-
 find $DIR -iname .git -exec rm -rf {} \; || true
 find $DIR -iname "test" -exec rm -rf {} \; 2> /dev/null || true
 find $DIR -iname "tests" -exec rm -rf {} \; 2> /dev/null || true

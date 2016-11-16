@@ -12,6 +12,7 @@
  *
 """
 from rapui import LoggingSetup
+from rapui.site.Site import setupSite
 
 LoggingSetup.setup()
 
@@ -91,6 +92,14 @@ def main():
     # Load all Papps
     from peek_client.papp.PappClientLoader import pappClientLoader
     d.addBoth(lambda _ : pappClientLoader.loadAllPapps())
+
+    def startSite(_):
+        sitePort = peekClientConfig.sitePort
+        setupSite(sitePort, debug=True)
+        # setupSite(8000, debug=True, protectedResource=AuthSessionWrapper())
+
+
+    d.addCallback(startSite)
 
     d.addErrback(printFailure)
 
