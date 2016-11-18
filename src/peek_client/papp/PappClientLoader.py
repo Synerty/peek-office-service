@@ -76,9 +76,9 @@ class PappClientLoader(PappLoaderBase):
 
         srcDir = os.path.join(self._pappPath, pappDirName, 'cpython')
         modPath = os.path.join(srcDir, pappName, "PappAgentMain.py")
-        if not os.path.exists(modPath) and os.path.exists(modPath + u"c"): # .pyc
+        if not os.path.exists(modPath) and os.path.exists(modPath + "c"): # .pyc
             PappAgentMainMod = imp.load_compiled('%s.PappAgentMain' % pappName,
-                                                modPath + u'c')
+                                                modPath + 'c')
         else:
             PappAgentMainMod = imp.load_source('%s.PappAgentMain' % pappName,
                                                 modPath)

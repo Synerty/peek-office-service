@@ -5,7 +5,7 @@ from twisted.internet import reactor
 from twisted.internet.defer import Deferred
 from twisted.trial import unittest
 
-from PappClientLoader import pappClientLoader
+from .PappClientLoader import pappClientLoader
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class PappClientLoaderTest(unittest.TestCase):
 
         logger.info(pappClientLoader.listPapps())
 
-        for papp in pappClientLoader._loadedPapps.values():
+        for papp in list(pappClientLoader._loadedPapps.values()):
             logger.info("configUrl = %s", papp.configUrl())
 
         d = Deferred()
@@ -43,7 +43,7 @@ class PappClientLoaderTest(unittest.TestCase):
         pappClientLoader.loadPapp(PAPP_NOOP)
         pappClientLoader.loadPapp(PAPP_NOOP)
 
-        for papp in pappClientLoader._loadedPapps.values():
+        for papp in list(pappClientLoader._loadedPapps.values()):
             logger.info("configUrl = %s", papp.configUrl())
 
         d = Deferred()
