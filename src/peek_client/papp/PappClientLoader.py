@@ -1,12 +1,11 @@
 import imp
 import logging
+import os
 import sys
 from _collections import defaultdict
 
-import os
-
+from peek_client import ClientPlatformApi
 from peek_client.PeekClientConfig import peekClientConfig
-from peek_client.papp.ClientPlatformApi import ClientPlatformApi
 from peek_platform.papp.PappLoaderBase import PappLoaderBase
 from rapui.site.ResourceUtil import removeResourcePaths, registeredResourcePaths
 from rapui.vortex.PayloadIO import PayloadIO
@@ -26,7 +25,7 @@ class PappClientLoader(PappLoaderBase):
     def __init__(self):
         PappLoaderBase.__init__(self)
 
-        from peek_client.PeekClientConfig import peekClientConfig
+        from peek_client import peekClientConfig
         self._pappPath = peekClientConfig.pappSoftwarePath
 
         self._rapuiEndpointInstancesByPappName = defaultdict(list)

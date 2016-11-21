@@ -51,19 +51,19 @@ def main():
     PeekPlatformConfig.componentName = "peek_client"
 
     # Tell the platform classes about our instance of the PappSwInstallManager
-    from peek_client.sw_install.PappSwInstallManager import pappSwInstallManager
+    from peek_client.sw_install import pappSwInstallManager
     PeekPlatformConfig.pappSwInstallManager = pappSwInstallManager
 
     # Tell the platform classes about our instance of the PeekSwInstallManager
-    from peek_client.sw_install.PeekSwInstallManager import peekSwInstallManager
+    from peek_client import peekSwInstallManager
     PeekPlatformConfig.peekSwInstallManager = peekSwInstallManager
 
     # Tell the platform classes about our instance of the PeekLoaderBase
-    from peek_client.papp.PappClientLoader import pappClientLoader
+    from peek_client import pappClientLoader
     PeekPlatformConfig.pappLoader = pappClientLoader
 
     # The config depends on the componentName, order is important
-    from peek_client.PeekClientConfig import peekClientConfig
+    from peek_client import peekClientConfig
     PeekPlatformConfig.config = peekClientConfig
 
     # Set default logging level
@@ -90,7 +90,7 @@ def main():
 
 
     # Load all Papps
-    from peek_client.papp.PappClientLoader import pappClientLoader
+    from peek_client import pappClientLoader
     d.addBoth(lambda _ : pappClientLoader.loadAllPapps())
 
     def startSite(_):

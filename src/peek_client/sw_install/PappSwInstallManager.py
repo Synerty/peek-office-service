@@ -1,4 +1,4 @@
-from peek_client.papp.PappClientLoader import pappClientLoader
+from peek_client import pappClientLoader
 from peek_platform.sw_install.PappSwInstallManagerBase import PappSwInstallManagerBase
 
 

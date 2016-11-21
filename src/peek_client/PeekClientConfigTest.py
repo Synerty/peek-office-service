@@ -1,14 +1,13 @@
 import logging
+import os
 import shutil
 import unittest
-
-import os
 
 import peek_platform
 
 peek_platform.PeekPlatformConfig.componentName = "unit_test"
 
-from peek_client.PeekClientConfig import PeekClientConfig
+from peek_client import PeekClientConfig
 
 logging.basicConfig(level=logging.DEBUG)
 
