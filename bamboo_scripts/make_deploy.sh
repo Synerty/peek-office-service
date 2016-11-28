@@ -38,7 +38,7 @@ cp -pr peek_client/src/peek_client $DIR
 cp -p  peek_client/src/run_peek_client.py $DIR
 cp -pr jsoncfg/src/jsoncfg $DIR
 
-# Init scripts, etc
+# Init bamboo_scripts, etc
 cp -p  peek_client/init/peek_client.init.rhel.sh $DIR
 cp -p  peek_client/init/peek_client.init.deb.sh $DIR
 

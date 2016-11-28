@@ -11,16 +11,16 @@
  *  Synerty Pty Ltd
  *
 """
-from rapui import LoggingSetup
-from rapui.site.Site import setupSite
+from txhttputil import LoggingUtil
+from txhttputil.site.SiteUtil import setupSite
 
-LoggingSetup.setup()
+LoggingUtil.setup()
 
 from twisted.internet import reactor
 
-from rapui import RapuiConfig
-from rapui.DeferUtil import printFailure
-from rapui.util.Directory import DirSettings
+from txhttputil import RapuiConfig
+from txhttputil import printFailure
+from txhttputil import DirSettings
 
 RapuiConfig.enabledJsRequire = False
 
@@ -28,7 +28,7 @@ import logging
 
 # EXAMPLE LOGGING CONFIG
 # Hide messages from vortex
-# logging.getLogger('rapui.vortex.VortexClient').setLevel(logging.INFO)
+# logging.getLogger('txhttputil.vortex.VortexClient').setLevel(logging.INFO)
 
 # logging.getLogger('peek_client_pof.realtime.RealtimePollerEcomProtocol'
 #                   ).setLevel(logging.INFO)
@@ -69,7 +69,7 @@ def main():
     # Set default logging level
     logging.root.setLevel(peekClientConfig.loggingLevel)
 
-    # Initialise the rapui Directory object
+    # Initialise the txhttputil Directory object
     DirSettings.defaultDirChmod = peekClientConfig.DEFAULT_DIR_CHMOD
     DirSettings.tmpDirPath = peekClientConfig.tmpPath
 
@@ -96,7 +96,7 @@ def main():
     def startSite(_):
         sitePort = peekClientConfig.sitePort
         setupSite(sitePort, debug=True)
-        # setupSite(8000, debug=True, protectedResource=AuthSessionWrapper())
+        # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
 
 
     d.addCallback(startSite)

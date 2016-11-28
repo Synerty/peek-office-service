@@ -7,9 +7,9 @@ from _collections import defaultdict
 from peek_client import ClientPlatformApi
 from peek_client.PeekClientConfig import peekClientConfig
 from peek_platform.papp.PappLoaderBase import PappLoaderBase
-from rapui.site.ResourceUtil import removeResourcePaths, registeredResourcePaths
-from rapui.vortex.PayloadIO import PayloadIO
-from rapui.vortex.Tuple import removeTuplesForTupleNames, \
+from txhttputil import PayloadIO
+from txhttputil import removeResourcePaths, registeredResourcePaths
+from txhttputil import removeTuplesForTupleNames, \
     registeredTupleNames, tupleForTupleName
 
 logger = logging.getLogger(__name__)
