@@ -11,18 +11,16 @@
  *  Synerty Pty Ltd
  *
 """
-from txhttputil import LoggingUtil
-from txhttputil.site.SiteUtil import setupSite
+from twisted.internet.defer import succeed
 
-LoggingUtil.setup()
+from pydirectory.Directory import DirSettings
+from txhttputil.site.SiteUtil import setupSite
+from txhttputil.util.DeferUtil import printFailure
+from txhttputil.util.LoggingUtil import setupLogging
+
+setupLogging()
 
 from twisted.internet import reactor
-
-from txhttputil import RapuiConfig
-from txhttputil import printFailure
-from txhttputil import DirSettings
-
-RapuiConfig.enabledJsRequire = False
 
 import logging
 
@@ -46,24 +44,23 @@ def main():
     # import pydevd
     # pydevd.settrace(suspend=False)
 
-
     from peek_platform import PeekPlatformConfig
     PeekPlatformConfig.componentName = "peek_client"
 
     # Tell the platform classes about our instance of the PappSwInstallManager
-    from peek_client.sw_install import pappSwInstallManager
+    from peek_client.sw_install.PappSwInstallManager import pappSwInstallManager
     PeekPlatformConfig.pappSwInstallManager = pappSwInstallManager
 
     # Tell the platform classes about our instance of the PeekSwInstallManager
-    from peek_client import peekSwInstallManager
+    from peek_client.sw_install.PeekSwInstallManager import peekSwInstallManager
     PeekPlatformConfig.peekSwInstallManager = peekSwInstallManager
 
     # Tell the platform classes about our instance of the PeekLoaderBase
-    from peek_client import pappClientLoader
+    from peek_client.papp.PappClientLoader import pappClientLoader
     PeekPlatformConfig.pappLoader = pappClientLoader
 
     # The config depends on the componentName, order is important
-    from peek_client import peekClientConfig
+    from peek_client.PeekClientConfig import peekClientConfig
     PeekPlatformConfig.config = peekClientConfig
 
     # Set default logging level
@@ -78,26 +75,25 @@ def main():
     PeekServerRestartWatchHandler.__unused = False
 
     # First, setup the Vortex Agent
-    from peek_platform.PeekVortexClient import peekVortexClient
-    d = peekVortexClient.connect()
-    d.addErrback(printFailure)
+    # from peek_platform.PeekVortexClient import peekVortexClient
+    # d = peekVortexClient.connect()
+    # d.addErrback(printFailure)
+    d = succeed(True)
 
-    # Start Update Handler,
-    from peek_platform.sw_version.PeekSwVersionPollHandler import peekSwVersionPollHandler
-    # Add both, The peek client might fail to connect, and if it does, the payload
-    # sent from the peekSwUpdater will be queued and sent when it does connect.
-    d.addBoth(lambda _: peekSwVersionPollHandler.start())
-
-
-    # Load all Papps
-    from peek_client import pappClientLoader
-    d.addBoth(lambda _ : pappClientLoader.loadAllPapps())
+    # # Start Update Handler,
+    # from peek_platform.sw_version.PeekSwVersionPollHandler import peekSwVersionPollHandler
+    # # Add both, The peek client might fail to connect, and if it does, the payload
+    # # sent from the peekSwUpdater will be queued and sent when it does connect.
+    # d.addBoth(lambda _: peekSwVersionPollHandler.start())
+    #
+    # # Load all Papps
+    # d.addBoth(lambda _: pappClientLoader.loadAllPapps())
 
     def startSite(_):
+        from peek_client.backend.PeekClientRootResource import rootResource
         sitePort = peekClientConfig.sitePort
-        setupSite(sitePort, debug=True)
+        setupSite("Peek Client", rootResource, sitePort, enableLogin=False)
         # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
-
 
     d.addCallback(startSite)
 
