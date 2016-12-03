@@ -13,7 +13,7 @@
 """
 from twisted.internet.defer import succeed
 
-from pydirectory.Directory import DirSettings
+from pytmpdir.Directory import DirSettings
 from txhttputil.site.SiteUtil import setupSite
 from txhttputil.util.DeferUtil import printFailure
 from txhttputil.util.LoggingUtil import setupLogging

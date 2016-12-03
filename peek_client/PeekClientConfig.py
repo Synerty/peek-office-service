@@ -35,7 +35,7 @@ class PeekClientConfig(PeekFileConfigBase,
     @property
     def sitePort(self):
         with self._cfg as c:
-            return c.server.port(8010, require_integer)
+            return c.server.port(8000, require_integer)
 
 
 peekClientConfig = PeekClientConfig()
