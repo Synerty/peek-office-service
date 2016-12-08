@@ -11,9 +11,8 @@
  *  Synerty Pty Ltd
  *
 """
-from twisted.internet.defer import succeed
-
 from pytmpdir.Directory import DirSettings
+from twisted.internet.defer import succeed
 from txhttputil.site.SiteUtil import setupSite
 from txhttputil.util.DeferUtil import printFailure
 from txhttputil.util.LoggingUtil import setupLogging
@@ -71,7 +70,7 @@ def main():
     DirSettings.tmpDirPath = peekClientConfig.tmpPath
 
     # Load server restart handler handler
-    from peek_platform.PeekServerRestartWatchHandler import PeekServerRestartWatchHandler
+    from peek_platform import PeekServerRestartWatchHandler
     PeekServerRestartWatchHandler.__unused = False
 
     # First, setup the Vortex Agent
@@ -90,9 +89,9 @@ def main():
     # d.addBoth(lambda _: pappClientLoader.loadAllPapps())
 
     def startSite(_):
-        from peek_client.backend.PeekClientRootResource import rootResource
+        from peek_client.backend.PeekClientRootResource import root
         sitePort = peekClientConfig.sitePort
-        setupSite("Peek Client", rootResource, sitePort, enableLogin=False)
+        setupSite("Peek Client", root, sitePort, enableLogin=False)
         # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
 
     d.addCallback(startSite)

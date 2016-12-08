@@ -15,10 +15,12 @@
 import logging
 
 from jsoncfg.value_mappers import require_integer
-from peek_platform.file_config.PeekFileConfigBase import PeekFileConfigBase
-from peek_platform.file_config.PeekFileConfigPeekServerClientMixin import \
+from peek_platform import PeekFileConfigBase
+from peek_platform import \
+    PeekFileConfigFrontendDirMixin
+from peek_platform import \
     PeekFileConfigPeekServerClientMixin
-from peek_platform.file_config.PeekFileConfigPlatformMixin import \
+from peek_platform import \
     PeekFileConfigPlatformMixin
 
 logger = logging.getLogger(__name__)
@@ -26,14 +28,17 @@ logger = logging.getLogger(__name__)
 
 class PeekClientConfig(PeekFileConfigBase,
                        PeekFileConfigPeekServerClientMixin,
-                       PeekFileConfigPlatformMixin):
+                       PeekFileConfigPlatformMixin,
+                       PeekFileConfigFrontendDirMixin):
     """
     This class creates a basic client configuration
     """
 
+    _frontendProjectDir = "/home/peek/project/peek_client_fe"
+
     ### SERVER SECTION ###
     @property
-    def sitePort(self):
+    def sitePort(self) -> int:
         with self._cfg as c:
             return c.server.port(8000, require_integer)
 

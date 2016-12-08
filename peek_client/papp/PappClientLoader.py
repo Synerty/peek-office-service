@@ -6,21 +6,21 @@ from _collections import defaultdict
 
 from peek_client.PeekClientConfig import peekClientConfig
 from peek_client.papp.ClientPlatformApi import ClientPlatformApi
-from peek_platform.papp.PappLoaderBase import PappLoaderBase
+from peek_platform.papp import PappLoaderABC
 from vortex.PayloadIO import PayloadIO
 
 logger = logging.getLogger(__name__)
 
-class PappClientLoader(PappLoaderBase):
+class PappClientLoader(PappLoaderABC):
     _instance = None
 
     def __new__(cls, *args, **kwargs):
         assert cls._instance is None, "PappClientLoader is a singleton, don't construct it"
-        cls._instance = PappLoaderBase.__new__(cls)
+        cls._instance = PappLoaderABC.__new__(cls)
         return cls._instance
 
     def __init__(self):
-        PappLoaderBase.__init__(self)
+        PappLoaderABC.__init__(self)
 
         self._pappPath = peekClientConfig.pappSoftwarePath
 
@@ -40,13 +40,10 @@ class PappClientLoader(PappLoaderBase):
             PayloadIO().remove(endpoint)
         del self._rapuiEndpointInstancesByPappName[pappName]
 
-        # # Remove the registered paths
-        # removeResourcePaths(self._rapuiResourcePathsByPappName[pappName])
-        # del self._rapuiResourcePathsByPappName[pappName]
 
-        # # Remove the registered tuples
-        # removeTuplesForTupleNames(self._rapuiTupleNamesByPappName[pappName])
-        # del self._rapuiTupleNamesByPappName[pappName]
+        # Remove the registered tuples
+        removeTuplesForTupleNames(self._rapuiTupleNamesByPappName[pappName])
+        del self._rapuiTupleNamesByPappName[pappName]
 
         self._unloadPappPackage(pappName, oldLoadedPapp)
 
@@ -63,8 +60,7 @@ class PappClientLoader(PappLoaderBase):
 
         # Make note of the initial registrations for this papp
         endpointInstancesBefore = set(PayloadIO().endpoints)
-        # resourcePathsBefore = set(registeredResourcePaths())
-        # tupleNamesBefore = set(registeredTupleNames())
+        tupleNamesBefore = set(registeredTupleNames())
 
         # Everyone gets their own instance of the papp API
         agentPlatformApi = ClientPlatformApi()
@@ -93,8 +89,8 @@ class PappClientLoader(PappLoaderBase):
         # self._rapuiResourcePathsByPappName[pappName] = list(
         #     set(registeredResourcePaths()) - resourcePathsBefore)
         #
-        # self._rapuiTupleNamesByPappName[pappName] = list(
-        #     set(registeredTupleNames()) - tupleNamesBefore)
+        self._rapuiTupleNamesByPappName[pappName] = list(
+            set(registeredTupleNames()) - tupleNamesBefore)
 
         self.sanityCheckAgentPapp(pappName)
 
@@ -112,18 +108,12 @@ class PappClientLoader(PappLoaderBase):
                 raise Exception("Payload endpoint does not contan 'papp':'%s'\n%s"
                                 % (pappName, filt))
 
-        # # all resource paths must start with their pappName
-        # for path in self._rapuiResourcePathsByPappName[pappName]:
-        #     if not path.strip('/').startswith(pappName):
-        #         raise Exception("Resource path does not start with '%s'\n%s"
-        #                         % (pappName, path))
-        #
-        # # all tuple names must start with their pappName
-        # for tupleName in self._rapuiTupleNamesByPappName[pappName]:
-        #     TupleCls = tupleForTupleName(tupleName)
-        #     if not tupleName.startswith(pappName):
-        #         raise Exception("Tuple name does not start with '%s', %s (%s)"
-        #                         % (pappName, tupleName, TupleCls.__name__))
+        # all tuple names must start with their pappName
+        for tupleName in self._rapuiTupleNamesByPappName[pappName]:
+            TupleCls = tupleForTupleName(tupleName)
+            if not tupleName.startswith(pappName):
+                raise Exception("Tuple name does not start with '%s', %s (%s)"
+                                % (pappName, tupleName, TupleCls.__name__))
 
     def notifyOfPappVersionUpdate(self, pappName, pappVersion):
         logger.info("Received PAPP update for %s version %s", pappName, pappVersion)
