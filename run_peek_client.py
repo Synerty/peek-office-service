@@ -89,7 +89,7 @@ def main():
     # d.addBoth(lambda _: pappClientLoader.loadAllPapps())
 
     def startSite(_):
-        from peek_client.backend.PeekClientRootResource import root
+        from peek_client.backend.SiteRootResource import root
         sitePort = peekClientConfig.sitePort
         setupSite("Peek Client", root, sitePort, enableLogin=False)
         # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
