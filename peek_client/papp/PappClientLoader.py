@@ -5,7 +5,7 @@ import sys
 from _collections import defaultdict
 
 from peek_client.PeekClientConfig import peekClientConfig
-from peek_client.papp.ClientPlatformApi import ClientPlatformApi
+from peek_client.papp.PeekClientPlatformHook import PeekClientPlatformHook
 from peek_platform.papp import PappLoaderABC
 from vortex.PayloadIO import PayloadIO
 
@@ -63,7 +63,7 @@ class PappClientLoader(PappLoaderABC):
         tupleNamesBefore = set(registeredTupleNames())
 
         # Everyone gets their own instance of the papp API
-        agentPlatformApi = ClientPlatformApi()
+        agentPlatformApi = PeekClientPlatformHook()
 
         srcDir = os.path.join(self._pappPath, pappDirName, 'cpython')
         modPath = os.path.join(srcDir, pappName, "PappAgentMain.py")
