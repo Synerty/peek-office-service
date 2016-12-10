@@ -51,7 +51,7 @@ class PappClientLoader(PappLoaderABC):
     def _loadPappThrows(self, pappName):
         self.unloadPapp(pappName)
 
-        pappDirName = peekClientConfig.pappDir(pappName)
+        pappDirName = peekClientConfig.pappDevelDir(pappName)
 
         if not pappDirName:
             logger.warning("Papp dir name for %s is missing, loading skipped",
