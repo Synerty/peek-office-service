@@ -13,9 +13,11 @@
 """
 from pytmpdir.Directory import DirSettings
 from twisted.internet.defer import succeed
+from txhttputil.site.FileUploadRequest import FileUploadRequest
 from txhttputil.site.SiteUtil import setupSite
 from txhttputil.util.DeferUtil import printFailure
 from txhttputil.util.LoggingUtil import setupLogging
+
 
 setupLogging()
 
@@ -37,12 +39,7 @@ logger = logging.getLogger(__name__)
 reactor.suggestThreadPoolSize(10)
 
 
-def main():
-    # defer.setDebugging(True)
-    # sys.argv.remove(DEBUG_ARG)
-    # import pydevd
-    # pydevd.settrace(suspend=False)
-
+def setupPlatform():
     from peek_platform import PeekPlatformConfig
     PeekPlatformConfig.componentName = "peek_client"
 
@@ -68,25 +65,41 @@ def main():
     # Initialise the txhttputil Directory object
     DirSettings.defaultDirChmod = peekClientConfig.DEFAULT_DIR_CHMOD
     DirSettings.tmpDirPath = peekClientConfig.tmpPath
+    FileUploadRequest.tmpFilePath = peekClientConfig.tmpPath
+
+
+def main():
+    # defer.setDebugging(True)
+    # sys.argv.remove(DEBUG_ARG)
+    # import pydevd
+    # pydevd.settrace(suspend=False)
+
+    setupPlatform()
+
+    # Import remaining components
+    from peek_client import importPackages
+    importPackages()
 
     # Load server restart handler handler
     from peek_platform import PeekServerRestartWatchHandler
     PeekServerRestartWatchHandler.__unused = False
 
     # First, setup the Vortex Agent
-    # from peek_platform.PeekVortexClient import peekVortexClient
-    # d = peekVortexClient.connect()
-    # d.addErrback(printFailure)
-    d = succeed(True)
+    from peek_platform.PeekVortexClient import peekVortexClient
+    d = peekVortexClient.connect()
+    d.addErrback(printFailure)
 
     # # Start Update Handler,
     # from peek_platform.sw_version.PeekSwVersionPollHandler import peekSwVersionPollHandler
     # # Add both, The peek client might fail to connect, and if it does, the payload
     # # sent from the peekSwUpdater will be queued and sent when it does connect.
     # d.addBoth(lambda _: peekSwVersionPollHandler.start())
-    #
-    # # Load all Papps
-    # d.addBoth(lambda _: pappClientLoader.loadAllPapps())
+
+    # Load all Papps
+    from peek_client.papp.PappClientLoader import pappClientLoader
+    d.addBoth(lambda _: pappClientLoader.loadAllPapps())
+
+    from peek_client.PeekClientConfig import peekClientConfig
 
     def startSite(_):
         from peek_client.backend.SiteRootResource import root

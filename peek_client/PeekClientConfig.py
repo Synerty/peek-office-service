@@ -13,28 +13,32 @@
  *
 '''
 import logging
+import os
 
 from jsoncfg.value_mappers import require_integer
-from peek_platform import PeekFileConfigBase
-from peek_platform import \
+from peek_platform.file_config.PeekFileConfigABC import PeekFileConfigABC
+from peek_platform.file_config.PeekFileConfigFrontendDirMixin import \
     PeekFileConfigFrontendDirMixin
-from peek_platform import \
+from peek_platform.file_config.PeekFileConfigOsMixin import PeekFileConfigOsMixin
+from peek_platform.file_config.PeekFileConfigPeekServerClientMixin import \
     PeekFileConfigPeekServerClientMixin
-from peek_platform import \
+from peek_platform.file_config.PeekFileConfigPlatformMixin import \
     PeekFileConfigPlatformMixin
 
 logger = logging.getLogger(__name__)
 
 
-class PeekClientConfig(PeekFileConfigBase,
+class PeekClientConfig(PeekFileConfigABC,
                        PeekFileConfigPeekServerClientMixin,
                        PeekFileConfigPlatformMixin,
+                       PeekFileConfigOsMixin,
                        PeekFileConfigFrontendDirMixin):
     """
     This class creates a basic client configuration
     """
 
-    _frontendProjectDir = "/home/peek/project/peek_client_fe"
+    import peek_client_fe
+    _frontendProjectDir = os.path.dirname(peek_client_fe.__file__)
 
     ### SERVER SECTION ###
     @property
