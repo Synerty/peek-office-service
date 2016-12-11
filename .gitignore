@@ -1,11 +1,19 @@
+
+# Ignore python compiled files
 *.pyc
-workspace.xml
+__pycache__
+
+# Ignore pycharm project settings
+.idea
+
+dist/
+build/
+*.egg-info/
 
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist
 /tmp
 
 # dependencies
