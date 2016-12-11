@@ -7,6 +7,7 @@ from peek_client.papp.PeekClientPlatformHook import PeekClientPlatformHook
 from peek_platform.papp.PappLoaderABC import PappLoaderABC
 from peek_platform.papp.PappFrontendInstallerABC import PappFrontendInstallerABC
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -22,10 +23,6 @@ class PappClientLoader(PappLoaderABC, PappFrontendInstallerABC):
         PappLoaderABC.__init__(self, *args, **kwargs)
         PappFrontendInstallerABC.__init__(self, *args, platformService="client", **kwargs)
 
-    def loadAllPapps(self):
-        PappLoaderABC.loadAllPapps(self)
-        self.buildFrontend()
-
     @property
     def _entryHookFuncName(self) -> str:
         return "peekClientEntryHook"
@@ -37,6 +34,20 @@ class PappClientLoader(PappLoaderABC, PappFrontendInstallerABC):
     @property
     def _platformServiceNames(self) -> [str]:
         return ["client"]
+
+    def loadAllPapps(self):
+        PappLoaderABC.loadAllPapps(self)
+        self.buildFrontend()
+
+    def unloadPapp(self, pappName: str):
+        PappLoaderABC.unloadPapp(self, pappName)
+
+        # Remove the Papp resource tree
+        from peek_client.backend.SiteRootResource import root as serverRootResource
+        try:
+            serverRootResource.deleteChild(pappName.encode())
+        except KeyError:
+            pass
 
     def _loadPappThrows(self, pappName: str, EntryHookClass: Type[PappCommonEntryHookABC],
                         pappRootDir: str) -> None:
@@ -55,8 +66,8 @@ class PappClientLoader(PappLoaderABC, PappFrontendInstallerABC):
 
         # Add all the resources required to serve the backend site
         # And all the papp custom resources it may create
-        from peek_client.backend.SiteRootResource import root as siteRootResource
-        siteRootResource.putChild(pappName.encode(), platformApi.rootResource)
+        from peek_client.backend.SiteRootResource import root as serverRootResource
+        serverRootResource.putChild(pappName.encode(), platformApi.rootResource)
 
         self._loadedPapps[pappName] = pappMain
 
