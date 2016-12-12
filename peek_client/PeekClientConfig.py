@@ -22,15 +22,15 @@ from peek_platform.file_config.PeekFileConfigFrontendDirMixin import \
 from peek_platform.file_config.PeekFileConfigOsMixin import PeekFileConfigOsMixin
 from peek_platform.file_config.PeekFileConfigPeekServerClientMixin import \
     PeekFileConfigPeekServerClientMixin
-from peek_platform.file_config.PeekFileConfigPlatformMixin import \
-    PeekFileConfigPlatformMixin
+from peek_platform.file_config.PeekFileConfigPlatformABC import \
+    PeekFileConfigPlatformABC
 
 logger = logging.getLogger(__name__)
 
 
 class PeekClientConfig(PeekFileConfigABC,
                        PeekFileConfigPeekServerClientMixin,
-                       PeekFileConfigPlatformMixin,
+                       PeekFileConfigPlatformABC,
                        PeekFileConfigOsMixin,
                        PeekFileConfigFrontendDirMixin):
     """
@@ -39,6 +39,11 @@ class PeekClientConfig(PeekFileConfigABC,
 
     import peek_client_fe
     _frontendProjectDir = os.path.dirname(peek_client_fe.__file__)
+
+    @property
+    def platformVersion(self):
+        import peek_client
+        return peek_client.__version__
 
     ### SERVER SECTION ###
     @property
