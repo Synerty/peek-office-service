@@ -52,8 +52,8 @@ def setupPlatform():
     PeekPlatformConfig.peekSwInstallManager = peekSwInstallManager
 
     # Tell the platform classes about our instance of the PeekLoaderBase
-    from peek_client.plugin.PluginClientLoader import pluginClientLoader
-    PeekPlatformConfig.pluginLoader = pluginClientLoader
+    from peek_client.plugin.ClientPluginLoader import clientPluginLoader
+    PeekPlatformConfig.pluginLoader = clientPluginLoader
 
     # The config depends on the componentName, order is important
     from peek_client.PeekClientConfig import peekClientConfig
@@ -96,8 +96,8 @@ def main():
     # d.addBoth(lambda _: peekSwVersionPollHandler.start())
 
     # Load all Plugins
-    from peek_client.plugin.PluginClientLoader import pluginClientLoader
-    d.addBoth(lambda _: pluginClientLoader.loadAllPlugins())
+    from peek_client.plugin.ClientPluginLoader import clientPluginLoader
+    d.addBoth(lambda _: clientPluginLoader.loadAllPlugins())
 
     from peek_client.PeekClientConfig import peekClientConfig
 

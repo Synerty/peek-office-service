@@ -11,11 +11,11 @@ from peek_platform.plugin.PluginFrontendInstallerABC import PluginFrontendInstal
 logger = logging.getLogger(__name__)
 
 
-class PluginClientLoader(PluginLoaderABC, PluginFrontendInstallerABC):
+class ClientPluginLoader(PluginLoaderABC, PluginFrontendInstallerABC):
     _instance = None
 
     def __new__(cls, *args, **kwargs):
-        assert cls._instance is None, "PluginClientLoader is a singleton, don't construct it"
+        assert cls._instance is None, "ClientPluginLoader is a singleton, don't construct it"
         cls._instance = PluginLoaderABC.__new__(cls)
         return cls._instance
 
@@ -72,4 +72,4 @@ class PluginClientLoader(PluginLoaderABC, PluginFrontendInstallerABC):
         self._loadedPlugins[pluginName] = pluginMain
 
 
-pluginClientLoader = PluginClientLoader()
+clientPluginLoader = ClientPluginLoader()

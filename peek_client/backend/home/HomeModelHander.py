@@ -17,9 +17,9 @@ class PluginAppTileTuple(Tuple):
 
 class HomeModelHander(ModelHandler):
     def buildModel(self, payload=None, **kwargs):
-        from peek_client.plugin.PluginClientLoader import pluginClientLoader
+        from peek_client.plugin.ClientPluginLoader import clientPluginLoader
         data = []
-        for name, title, path in pluginClientLoader.pluginFrontendTitleUrls:
+        for name, title, path in clientPluginLoader.pluginFrontendTitleUrls:
             data.append(
                 PluginAppTileTuple(name=name,
                                  title=title,
