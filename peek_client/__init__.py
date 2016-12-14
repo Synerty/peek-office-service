@@ -9,6 +9,6 @@ for mod in filterModules(__name__, __file__):
 
 def importPackages():
     from . import backend
-    from . import papp
+    from . import plugin
     from . import sw_install
 

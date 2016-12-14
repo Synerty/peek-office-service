@@ -43,17 +43,17 @@ def setupPlatform():
     from peek_platform import PeekPlatformConfig
     PeekPlatformConfig.componentName = "peek_client"
 
-    # Tell the platform classes about our instance of the PappSwInstallManager
-    from peek_client.sw_install.PappSwInstallManager import pappSwInstallManager
-    PeekPlatformConfig.pappSwInstallManager = pappSwInstallManager
+    # Tell the platform classes about our instance of the PluginSwInstallManager
+    from peek_client.sw_install.PluginSwInstallManager import pluginSwInstallManager
+    PeekPlatformConfig.pluginSwInstallManager = pluginSwInstallManager
 
     # Tell the platform classes about our instance of the PeekSwInstallManager
     from peek_client.sw_install.PeekSwInstallManager import peekSwInstallManager
     PeekPlatformConfig.peekSwInstallManager = peekSwInstallManager
 
     # Tell the platform classes about our instance of the PeekLoaderBase
-    from peek_client.papp.PappClientLoader import pappClientLoader
-    PeekPlatformConfig.pappLoader = pappClientLoader
+    from peek_client.plugin.PluginClientLoader import pluginClientLoader
+    PeekPlatformConfig.pluginLoader = pluginClientLoader
 
     # The config depends on the componentName, order is important
     from peek_client.PeekClientConfig import peekClientConfig
@@ -95,9 +95,9 @@ def main():
     # # sent from the peekSwUpdater will be queued and sent when it does connect.
     # d.addBoth(lambda _: peekSwVersionPollHandler.start())
 
-    # Load all Papps
-    from peek_client.papp.PappClientLoader import pappClientLoader
-    d.addBoth(lambda _: pappClientLoader.loadAllPapps())
+    # Load all Plugins
+    from peek_client.plugin.PluginClientLoader import pluginClientLoader
+    d.addBoth(lambda _: pluginClientLoader.loadAllPlugins())
 
     from peek_client.PeekClientConfig import peekClientConfig
 
