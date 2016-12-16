@@ -2,13 +2,13 @@ from vortex.Tuple import addTupleType, Tuple, TupleField
 
 from vortex.handler.ModelHandler import ModelHandler
 
-filt = {'plugin': 'peek_client',
+filt = {'plugin': 'peek-client',
         'key': 'home.apps'}
 
 
 @addTupleType
 class PluginAppTileTuple(Tuple):
-    __tupleType__ = 'peek_client.PluginAppTileTuple'
+    __tupleType__ = 'peek-client.PluginAppTileTuple'
 
     name = TupleField(comment="The name of the plugin, EG plugin_noop")
     title = TupleField(comment="The title of the plugin, EG No Op")

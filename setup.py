@@ -4,7 +4,7 @@ from distutils.core import setup
 
 from setuptools import find_packages
 
-package_name = "peek_client"
+package_name = "peek-client"
 package_version = '0.0.6dev123456'
 
 egg_info = "%s.egg-info" % package_name
@@ -16,10 +16,10 @@ setup(
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     entry_points={
         'console_scripts': [
-            'run_peek_client = peek_client.run_peek_client.main',
+            'run_peek_client = peek-client.run_peek_client.main',
         ],
     },
-    install_requires=["peek_platform", "peek_client_fe"],
+    install_requires=["peek-platform", "peek-client-fe"],
     version=package_version,
     description='Peek Platform - Client Service',
     author='Synerty',

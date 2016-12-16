@@ -41,7 +41,7 @@ reactor.suggestThreadPoolSize(10)
 
 def setupPlatform():
     from peek_platform import PeekPlatformConfig
-    PeekPlatformConfig.componentName = "peek_client"
+    PeekPlatformConfig.componentName = "peek-client"
 
     # Tell the platform classes about our instance of the PluginSwInstallManager
     from peek_client.sw_install.PluginSwInstallManager import pluginSwInstallManager
