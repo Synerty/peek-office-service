@@ -89,11 +89,11 @@ def main():
     d = peekVortexClient.connect()
     d.addErrback(printFailure)
 
-    # # Start Update Handler,
-    # from peek_platform.sw_version.PeekSwVersionPollHandler import peekSwVersionPollHandler
-    # # Add both, The peek client might fail to connect, and if it does, the payload
-    # # sent from the peekSwUpdater will be queued and sent when it does connect.
-    # d.addBoth(lambda _: peekSwVersionPollHandler.start())
+    # Start Update Handler,
+    from peek_platform.sw_version.PeekSwVersionPollHandler import peekSwVersionPollHandler
+    # Add both, The peek client might fail to connect, and if it does, the payload
+    # sent from the peekSwUpdater will be queued and sent when it does connect.
+    d.addBoth(lambda _: peekSwVersionPollHandler.start())
 
     # Load all Plugins
     from peek_client.plugin.ClientPluginLoader import clientPluginLoader
