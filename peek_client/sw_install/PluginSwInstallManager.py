@@ -1,8 +1,8 @@
 from peek_client.plugin.ClientPluginLoader import clientPluginLoader
-from peek_platform.sw_install.PluginSwInstallManagerBase import PluginSwInstallManagerBase
+from peek_platform.sw_install.PluginSwInstallManagerABC import PluginSwInstallManagerABC
 
 
-class PluginSwInstallManager(PluginSwInstallManagerBase):
+class PluginSwInstallManager(PluginSwInstallManagerABC):
     def notifyOfPluginVersionUpdate(self, pluginName, targetVersion):
         clientPluginLoader.loadPlugin(pluginName)
 
