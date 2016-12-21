@@ -12,12 +12,12 @@
  *
 """
 from pytmpdir.Directory import DirSettings
-from twisted.internet.defer import succeed
 from txhttputil.site.FileUploadRequest import FileUploadRequest
 from txhttputil.site.SiteUtil import setupSite
 from txhttputil.util.DeferUtil import printFailure
 from txhttputil.util.LoggingUtil import setupLogging
 
+from peek_platform import PeekPlatformConfig
 
 setupLogging()
 
@@ -44,28 +44,28 @@ def setupPlatform():
     PeekPlatformConfig.componentName = "peek-client"
 
     # Tell the platform classes about our instance of the PluginSwInstallManager
-    from peek_client.sw_install.PluginSwInstallManager import pluginSwInstallManager
-    PeekPlatformConfig.pluginSwInstallManager = pluginSwInstallManager
+    from peek_client.sw_install.PluginSwInstallManager import PluginSwInstallManager
+    PeekPlatformConfig.pluginSwInstallManager = PluginSwInstallManager()
 
     # Tell the platform classes about our instance of the PeekSwInstallManager
-    from peek_client.sw_install.PeekSwInstallManager import peekSwInstallManager
-    PeekPlatformConfig.peekSwInstallManager = peekSwInstallManager
+    from peek_client.sw_install.PeekSwInstallManager import PeekSwInstallManager
+    PeekPlatformConfig.peekSwInstallManager = PeekSwInstallManager()
 
     # Tell the platform classes about our instance of the PeekLoaderBase
-    from peek_client.plugin.ClientPluginLoader import clientPluginLoader
-    PeekPlatformConfig.pluginLoader = clientPluginLoader
+    from peek_client.plugin.ClientPluginLoader import ClientPluginLoader
+    PeekPlatformConfig.pluginLoader = ClientPluginLoader()
 
     # The config depends on the componentName, order is important
-    from peek_client.PeekClientConfig import peekClientConfig
-    PeekPlatformConfig.config = peekClientConfig
+    from peek_client.PeekClientConfig import PeekClientConfig
+    PeekPlatformConfig.config = PeekClientConfig()
 
     # Set default logging level
-    logging.root.setLevel(peekClientConfig.loggingLevel)
+    logging.root.setLevel(PeekPlatformConfig.config.loggingLevel)
 
     # Initialise the txhttputil Directory object
-    DirSettings.defaultDirChmod = peekClientConfig.DEFAULT_DIR_CHMOD
-    DirSettings.tmpDirPath = peekClientConfig.tmpPath
-    FileUploadRequest.tmpFilePath = peekClientConfig.tmpPath
+    DirSettings.defaultDirChmod = PeekPlatformConfig.config.DEFAULT_DIR_CHMOD
+    DirSettings.tmpDirPath = PeekPlatformConfig.config.tmpPath
+    FileUploadRequest.tmpFilePath = PeekPlatformConfig.config.tmpPath
 
 
 def main():
@@ -96,14 +96,14 @@ def main():
     d.addBoth(lambda _: peekSwVersionPollHandler.start())
 
     # Load all Plugins
-    from peek_client.plugin.ClientPluginLoader import clientPluginLoader
-    d.addBoth(lambda _: clientPluginLoader.loadAllPlugins())
-
-    from peek_client.PeekClientConfig import peekClientConfig
+    d.addBoth(lambda _: PeekPlatformConfig.pluginLoader.loadAllPlugins())
 
     def startSite(_):
+        from peek_client.backend.SiteRootResource import setup as setupRoot
         from peek_client.backend.SiteRootResource import root
-        sitePort = peekClientConfig.sitePort
+        setupRoot()
+
+        sitePort = PeekPlatformConfig.config.sitePort
         setupSite("Peek Client", root, sitePort, enableLogin=False)
         # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
 
@@ -113,7 +113,8 @@ def main():
 
     # Init the realtime handler
 
-    logger.info('Peek Client is running, version=%s', peekClientConfig.platformVersion)
+    logger.info('Peek Client is running, version=%s',
+                PeekPlatformConfig.config.platformVersion)
     reactor.run()
 
 

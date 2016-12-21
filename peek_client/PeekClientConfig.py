@@ -47,4 +47,3 @@ class PeekClientConfig(PeekFileConfigABC,
             return c.server.port(8000, require_integer)
 
 
-peekClientConfig = PeekClientConfig()

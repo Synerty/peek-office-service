@@ -72,4 +72,3 @@ class ClientPluginLoader(PluginLoaderABC, PluginFrontendInstallerABC):
         self._loadedPlugins[pluginName] = pluginMain
 
 
-clientPluginLoader = ClientPluginLoader()
