@@ -1,8 +1,9 @@
+from peek_platform import PeekPlatformConfig
 from vortex.Tuple import addTupleType, Tuple, TupleField
 
 from vortex.handler.ModelHandler import ModelHandler
 
-filt = {'plugin': 'peek-client',
+filt = {'plugin': 'peek_client',
         'key': 'home.apps'}
 
 
@@ -17,9 +18,8 @@ class PluginAppTileTuple(Tuple):
 
 class HomeModelHander(ModelHandler):
     def buildModel(self, payload=None, **kwargs):
-        from peek_client.plugin.ClientPluginLoader import clientPluginLoader
         data = []
-        for name, title, path in clientPluginLoader.pluginFrontendTitleUrls:
+        for name, title, path in PeekPlatformConfig.pluginLoader.pluginFrontendTitleUrls:
             data.append(
                 PluginAppTileTuple(name=name,
                                  title=title,
