@@ -22,5 +22,3 @@ def setup():
     os.makedirs(distDir, exist_ok=True)
 
     root.addFileSystemRoot(distDir)
-
-    root.putChild(b'vortex', VortexResource())

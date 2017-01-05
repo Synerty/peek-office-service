@@ -1,12 +1,11 @@
 import logging
-from typing import Type
+from typing import Type, Tuple
 
+from peek_client.plugin.PeekClientPlatformHook import PeekClientPlatformHook
+from peek_platform.plugin.PluginFrontendInstallerABC import PluginFrontendInstallerABC
+from peek_platform.plugin.PluginLoaderABC import PluginLoaderABC
 from peek_plugin_base.PluginCommonEntryHookABC import PluginCommonEntryHookABC
 from peek_plugin_base.client.PluginClientEntryHookABC import PluginClientEntryHookABC
-from peek_client.plugin.PeekClientPlatformHook import PeekClientPlatformHook
-from peek_platform.plugin.PluginLoaderABC import PluginLoaderABC
-from peek_platform.plugin.PluginFrontendInstallerABC import PluginFrontendInstallerABC
-
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +20,8 @@ class ClientPluginLoader(PluginLoaderABC, PluginFrontendInstallerABC):
 
     def __init__(self, *args, **kwargs):
         PluginLoaderABC.__init__(self, *args, **kwargs)
-        PluginFrontendInstallerABC.__init__(self, *args, platformService="client", **kwargs)
+        PluginFrontendInstallerABC.__init__(self, *args, platformService="client",
+                                            **kwargs)
 
     @property
     def _entryHookFuncName(self) -> str:
@@ -49,14 +49,16 @@ class ClientPluginLoader(PluginLoaderABC, PluginFrontendInstallerABC):
         except KeyError:
             pass
 
-    def _loadPluginThrows(self, pluginName: str, EntryHookClass: Type[PluginCommonEntryHookABC],
-                        pluginRootDir: str) -> None:
+    def _loadPluginThrows(self, pluginName: str,
+                          EntryHookClass: Type[PluginCommonEntryHookABC],
+                          pluginRootDir: str,
+                          requiresService: Tuple[str, ...]) -> None:
         # Everyone gets their own instance of the plugin API
         platformApi = PeekClientPlatformHook()
 
         pluginMain = EntryHookClass(pluginName=pluginName,
-                                  pluginRootDir=pluginRootDir,
-                                  platform=platformApi)
+                                    pluginRootDir=pluginRootDir,
+                                    platform=platformApi)
 
         # Load the plugin
         pluginMain.load()
@@ -70,5 +72,3 @@ class ClientPluginLoader(PluginLoaderABC, PluginFrontendInstallerABC):
         serverRootResource.putChild(pluginName.encode(), platformApi.rootResource)
 
         self._loadedPlugins[pluginName] = pluginMain
-
-
