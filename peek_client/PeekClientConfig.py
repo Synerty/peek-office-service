@@ -1,17 +1,17 @@
-'''
+"""
  *
  *  Copyright Synerty Pty Ltd 2013
  *
  *  This software is proprietary, you are not free to copy
  *  or redistribute this code in any format.
  *
- *  All rights to this software are reserved by 
+ *  All rights to this software are reserved by
  *  Synerty Pty Ltd
  *
  * Website : http://www.synerty.com
  * Support : support@synerty.com
  *
-'''
+"""
 import logging
 import os
 
@@ -45,5 +45,10 @@ class PeekClientConfig(PeekFileConfigABC,
     def sitePort(self) -> int:
         with self._cfg as c:
             return c.server.port(8000, require_integer)
+
+    @property
+    def webSocketPort(self) -> int:
+        with self._cfg as c:
+            return c.server.webSocketPort(8001, require_integer)
 
 

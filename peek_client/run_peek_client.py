@@ -113,6 +113,10 @@ def main():
         setupSite("Peek Client", root, sitePort, enableLogin=False)
         # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
 
+        webSocketPort = PeekPlatformConfig.config.webSocketPort
+        VortexFactory.createWebsocketServer(
+            PeekPlatformConfig.componentName, webSocketPort)
+
     d.addCallback(startSite)
 
     def startedSuccessfully(_):
