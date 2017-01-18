@@ -93,10 +93,14 @@ def main():
     d.addErrback(printFailure)
 
     # Start Update Handler,
-    from peek_platform.sw_version.PeekSwVersionPollHandler import peekSwVersionPollHandler
     # Add both, The peek client might fail to connect, and if it does, the payload
     # sent from the peekSwUpdater will be queued and sent when it does connect.
+    from peek_platform.sw_version.PeekSwVersionPollHandler import peekSwVersionPollHandler
     d.addBoth(lambda _: peekSwVersionPollHandler.start())
+
+    # Start client main data observer, this is not used by the plugins
+    # (Initialised now, not as a callback)
+    from peek_client.backend import ClientObservable
 
     # Load all Plugins
     d.addBoth(lambda _: PeekPlatformConfig.pluginLoader.loadAllPlugins())
