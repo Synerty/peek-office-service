@@ -44,7 +44,7 @@ setup(
     package_data={'': package_files},
     entry_points={
         'console_scripts': [
-            'run_peek_client = peek_client.run_peek_client.main',
+            'run_peek_client = peek_client.run_peek_client:main',
         ],
     },
     install_requires=["peek-platform", "peek-client-fe"],
