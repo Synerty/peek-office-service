@@ -1,7 +1,6 @@
 import os
 
 from txhttputil.site.FileUnderlayResource import FileUnderlayResource
-from vortex.VortexResource import VortexResource
 
 from peek_platform import PeekPlatformConfig
 
