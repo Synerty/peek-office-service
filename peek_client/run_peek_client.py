@@ -12,10 +12,12 @@
  *
 """
 from pytmpdir.Directory import DirSettings
+from twisted.internet.defer import inlineCallbacks
 from txhttputil.site.FileUploadRequest import FileUploadRequest
 from txhttputil.site.SiteUtil import setupSite
 from txhttputil.util.DeferUtil import printFailure
 from txhttputil.util.LoggingUtil import setupLogging
+from vortex.DeferUtil import vortexLogFailure
 
 from peek_plugin_base.PeekVortexUtil import peekClientName
 from vortex.VortexFactory import VortexFactory
@@ -90,20 +92,22 @@ def main():
     d = VortexFactory.createTcpClient(PeekPlatformConfig.componentName,
                                        PeekPlatformConfig.config.peekServerHost,
                                        PeekPlatformConfig.config.peekServerVortexTcpPort)
-    d.addErrback(printFailure)
 
     # Start Update Handler,
     # Add both, The peek client might fail to connect, and if it does, the payload
     # sent from the peekSwUpdater will be queued and sent when it does connect.
     from peek_platform.sw_version.PeekSwVersionPollHandler import peekSwVersionPollHandler
-    d.addBoth(lambda _: peekSwVersionPollHandler.start())
+
+    d.addErrback(vortexLogFailure, logger, consumeError=True)
+    d.addCallback(lambda _: peekSwVersionPollHandler.start())
 
     # Start client main data observer, this is not used by the plugins
     # (Initialised now, not as a callback)
     from peek_client.backend import ClientObservable
 
     # Load all Plugins
-    d.addBoth(lambda _: PeekPlatformConfig.pluginLoader.loadAllPlugins())
+    d.addErrback(vortexLogFailure, logger, consumeError=True)
+    d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadAllPlugins())
 
     def startSite(_):
         from peek_client.backend.SiteRootResource import setup as setupRoot
@@ -128,8 +132,8 @@ def main():
                     PeekPlatformConfig.config.platformVersion)
         return _
 
+    d.addErrback(vortexLogFailure, logger, consumeError=True)
     d.addCallback(startedSuccessfully)
-    d.addErrback(printFailure)
     reactor.run()
 
 

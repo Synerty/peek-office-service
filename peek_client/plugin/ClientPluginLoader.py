@@ -1,8 +1,10 @@
 import logging
+import os
+
 from typing import Type, Tuple
 
 from peek_client.plugin.PeekClientPlatformHook import PeekClientPlatformHook
-from peek_platform.plugin.PluginFrontendInstallerABC import PluginFrontendInstallerABC
+from peek_platform.frontend.NativescriptBuilder import NativescriptBuilder
 from peek_platform.plugin.PluginLoaderABC import PluginLoaderABC
 from peek_plugin_base.PluginCommonEntryHookABC import PluginCommonEntryHookABC
 from peek_plugin_base.client.PluginClientEntryHookABC import PluginClientEntryHookABC
@@ -10,7 +12,7 @@ from peek_plugin_base.client.PluginClientEntryHookABC import PluginClientEntryHo
 logger = logging.getLogger(__name__)
 
 
-class ClientPluginLoader(PluginLoaderABC, PluginFrontendInstallerABC):
+class ClientPluginLoader(PluginLoaderABC):
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -20,8 +22,6 @@ class ClientPluginLoader(PluginLoaderABC, PluginFrontendInstallerABC):
 
     def __init__(self, *args, **kwargs):
         PluginLoaderABC.__init__(self, *args, **kwargs)
-        PluginFrontendInstallerABC.__init__(self, *args, platformService="client",
-                                            **kwargs)
 
     @property
     def _entryHookFuncName(self) -> str:
@@ -37,7 +37,17 @@ class ClientPluginLoader(PluginLoaderABC, PluginFrontendInstallerABC):
 
     def loadAllPlugins(self):
         PluginLoaderABC.loadAllPlugins(self)
-        self.buildFrontend()
+
+        import peek_client_fe
+        frontendProjectDir = os.path.dirname(peek_client_fe.__file__)
+
+        from peek_platform import PeekPlatformConfig
+        PeekPlatformConfig.config
+        nsBuilder = NativescriptBuilder(frontendProjectDir,
+                                        PeekPlatformConfig.componentName,
+                                        PeekPlatformConfig.config,
+                                        self._loadedPlugins)
+        nsBuilder.build()
 
     def unloadPlugin(self, pluginName: str):
         PluginLoaderABC.unloadPlugin(self, pluginName)

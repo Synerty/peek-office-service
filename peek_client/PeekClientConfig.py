@@ -37,9 +37,6 @@ class PeekClientConfig(PeekFileConfigABC,
     This class creates a basic client configuration
     """
 
-    import peek_client_fe
-    _frontendProjectDir = os.path.dirname(peek_client_fe.__file__)
-
     ### SERVER SECTION ###
     @property
     def sitePort(self) -> int:

@@ -11,7 +11,11 @@ def setup():
     root.enableSinglePageApplication()
 
     # This dist dir is automatically generated, but check it's parent
-    distDir = PeekPlatformConfig.config.feDistDir
+
+    import peek_client_fe
+    frontendProjectDir = os.path.dirname(peek_client_fe.__file__)
+    distDir = os.path.join(frontendProjectDir, 'build-web', 'dist')
+
     distDirParent = os.path.dirname(distDir)
     if not os.path.isdir(distDirParent):
         raise NotADirectoryError(distDirParent)
