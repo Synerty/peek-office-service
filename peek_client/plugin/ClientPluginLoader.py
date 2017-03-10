@@ -5,6 +5,7 @@ from typing import Type, Tuple
 
 from peek_client.plugin.PeekClientPlatformHook import PeekClientPlatformHook
 from peek_platform.frontend.NativescriptBuilder import NativescriptBuilder
+from peek_platform.frontend.WebBuilder import WebBuilder
 from peek_platform.plugin.PluginLoaderABC import PluginLoaderABC
 from peek_plugin_base.PluginCommonEntryHookABC import PluginCommonEntryHookABC
 from peek_plugin_base.client.PluginClientEntryHookABC import PluginClientEntryHookABC
@@ -48,6 +49,12 @@ class ClientPluginLoader(PluginLoaderABC):
                                         PeekPlatformConfig.config,
                                         self._loadedPlugins)
         nsBuilder.build()
+
+        webBuilder = WebBuilder(frontendProjectDir,
+                                PeekPlatformConfig.componentName,
+                                PeekPlatformConfig.config,
+                                self._loadedPlugins)
+        webBuilder.build()
 
     def unloadPlugin(self, pluginName: str):
         PluginLoaderABC.unloadPlugin(self, pluginName)
