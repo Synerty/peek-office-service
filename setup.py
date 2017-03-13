@@ -5,7 +5,7 @@ from distutils.core import setup
 pip_package_name = "peek-client"
 py_package_name = "peek_client"
 
-package_version = '0.0.19'
+package_version = '0.0.27'
 
 egg_info = "%s.egg-info" % pip_package_name
 if os.path.isdir(egg_info):
