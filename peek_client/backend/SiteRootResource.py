@@ -12,8 +12,8 @@ def setup():
 
     # This dist dir is automatically generated, but check it's parent
 
-    import peek_client_fe
-    frontendProjectDir = os.path.dirname(peek_client_fe.__file__)
+    import peek_mobile
+    frontendProjectDir = os.path.dirname(peek_mobile.__file__)
     distDir = os.path.join(frontendProjectDir, 'build-web', 'dist')
 
     distDirParent = os.path.dirname(distDir)

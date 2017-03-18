@@ -45,13 +45,13 @@ class ClientPluginLoader(PluginLoaderABC):
         from peek_platform import PeekPlatformConfig
         PeekPlatformConfig.config
         nsBuilder = NativescriptBuilder(frontendProjectDir,
-                                        "mobile",
+                                        "peek-mobile",
                                         PeekPlatformConfig.config,
                                         self._loadedPlugins)
         nsBuilder.build()
 
         webBuilder = WebBuilder(frontendProjectDir,
-                                "mobile",
+                                "peek-mobile",
                                 PeekPlatformConfig.config,
                                 self._loadedPlugins)
         webBuilder.build()
