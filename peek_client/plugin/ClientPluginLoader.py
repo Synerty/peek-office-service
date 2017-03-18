@@ -39,19 +39,19 @@ class ClientPluginLoader(PluginLoaderABC):
     def loadAllPlugins(self):
         PluginLoaderABC.loadAllPlugins(self)
 
-        import peek_client_fe
-        frontendProjectDir = os.path.dirname(peek_client_fe.__file__)
+        import peek_mobile
+        frontendProjectDir = os.path.dirname(peek_mobile.__file__)
 
         from peek_platform import PeekPlatformConfig
         PeekPlatformConfig.config
         nsBuilder = NativescriptBuilder(frontendProjectDir,
-                                        PeekPlatformConfig.componentName,
+                                        "mobile",
                                         PeekPlatformConfig.config,
                                         self._loadedPlugins)
         nsBuilder.build()
 
         webBuilder = WebBuilder(frontendProjectDir,
-                                PeekPlatformConfig.componentName,
+                                "mobile",
                                 PeekPlatformConfig.config,
                                 self._loadedPlugins)
         webBuilder.build()
