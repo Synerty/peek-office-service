@@ -47,7 +47,7 @@ setup(
             'run_peek_client = peek_client.run_peek_client:main',
         ],
     },
-    install_requires=["peek-platform", "peek-client-fe"],
+    install_requires=["peek-platform", "peek-mobile"],
     version=package_version,
     description='Peek Platform - Client Service',
     author='Synerty',
