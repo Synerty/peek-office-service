@@ -47,13 +47,13 @@ class ClientPluginLoader(PluginLoaderABC):
         nsBuilder = NativescriptBuilder(frontendProjectDir,
                                         "peek-mobile",
                                         PeekPlatformConfig.config,
-                                        self._loadedPlugins)
+                                        self._loadedPlugins.values())
         nsBuilder.build()
 
         webBuilder = WebBuilder(frontendProjectDir,
                                 "peek-mobile",
                                 PeekPlatformConfig.config,
-                                self._loadedPlugins)
+                                self._loadedPlugins.values())
         webBuilder.build()
 
     def unloadPlugin(self, pluginName: str):
