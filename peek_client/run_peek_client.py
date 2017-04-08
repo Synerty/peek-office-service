@@ -19,7 +19,7 @@ from txhttputil.util.DeferUtil import printFailure
 from txhttputil.util.LoggingUtil import setupLogging
 from vortex.DeferUtil import vortexLogFailure
 
-from peek_plugin_base.PeekVortexUtil import peekClientName
+from peek_plugin_base.PeekVortexUtil import peekClientName, peekServerName
 from vortex.VortexFactory import VortexFactory
 
 setupLogging()
@@ -83,9 +83,15 @@ def main():
     from peek_client import importPackages
     importPackages()
 
-    # Load server restart handler handler
-    from peek_platform import PeekServerRestartWatchHandler
-    PeekServerRestartWatchHandler.__unused = False
+    # Make the agent restart when the server restarts, or when it looses connection
+    def restart(status):
+        from peek_platform import PeekPlatformConfig
+        PeekPlatformConfig.peekSwInstallManager.restartProcess()
+
+    (VortexFactory.subscribeToVortexStatusChange(peekServerName)
+        .filter(lambda online:online == False)
+        .subscribe(on_next=restart)
+     )
 
     # First, setup the VortexServer Agent
     from peek_platform import PeekPlatformConfig
