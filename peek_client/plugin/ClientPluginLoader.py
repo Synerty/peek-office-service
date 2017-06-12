@@ -1,7 +1,7 @@
 import logging
-import os
-
 from typing import Type, Tuple
+
+import os
 
 from peek_client.plugin.PeekClientPlatformHook import PeekClientPlatformHook
 from peek_platform.frontend.NativescriptBuilder import NativescriptBuilder
@@ -39,22 +39,58 @@ class ClientPluginLoader(PluginLoaderABC):
     def loadAllPlugins(self):
         PluginLoaderABC.loadAllPlugins(self)
 
-        import peek_mobile
-        frontendProjectDir = os.path.dirname(peek_mobile.__file__)
-
         from peek_platform import PeekPlatformConfig
         PeekPlatformConfig.config
-        nsBuilder = NativescriptBuilder(frontendProjectDir,
-                                        "peek-mobile",
-                                        PeekPlatformConfig.config,
-                                        self._loadedPlugins.values())
-        nsBuilder.build()
 
-        webBuilder = WebBuilder(frontendProjectDir,
-                                "peek-mobile",
-                                PeekPlatformConfig.config,
-                                self._loadedPlugins.values())
-        webBuilder.build()
+        # --------------------
+        # Prepare the Peek Mobile
+
+        mobileProjectDir = None
+        try:
+            import peek_mobile
+            mobileProjectDir = os.path.dirname(peek_mobile.__file__)
+
+        except:
+            pass
+
+        if not mobileProjectDir:
+            logger.warning("Skipping builds of peek-mobile"
+                           ", the package can not be imported")
+
+        else:
+            nsBuilder = NativescriptBuilder(mobileProjectDir,
+                                            "peek-mobile",
+                                            PeekPlatformConfig.config,
+                                            self._loadedPlugins.values())
+            nsBuilder.build()
+
+            mobileWebBuilder = WebBuilder(mobileProjectDir,
+                                          "peek-mobile",
+                                          PeekPlatformConfig.config,
+                                          self._loadedPlugins.values())
+            mobileWebBuilder.build()
+
+        # --------------------
+        # Prepare the Peek Desktop
+
+        desktopProjectDir = None
+        try:
+            import peek_desktop
+            desktopProjectDir = os.path.dirname(peek_desktop.__file__)
+
+        except:
+            pass
+
+        if not desktopProjectDir:
+            logger.warning("Skipping builds of peek-desktop"
+                           ", the package can not be imported")
+
+        else:
+            desktopWebBuilder = WebBuilder(desktopProjectDir,
+                                           "peek-desktop",
+                                           PeekPlatformConfig.config,
+                                           self._loadedPlugins.values())
+            desktopWebBuilder.build()
 
     def unloadPlugin(self, pluginName: str):
         PluginLoaderABC.unloadPlugin(self, pluginName)

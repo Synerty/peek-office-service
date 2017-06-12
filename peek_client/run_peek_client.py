@@ -123,13 +123,17 @@ def main():
         # Create the vortex server
         VortexFactory.createServer(PeekPlatformConfig.componentName, root)
 
-        sitePort = PeekPlatformConfig.config.sitePort
-        setupSite("Peek Client", root, sitePort, enableLogin=False)
+        mobileSitePort = PeekPlatformConfig.config.mobileSitePort
+        setupSite("Peek Mobile Site", root, mobileSitePort, enableLogin=False)
         # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
 
         webSocketPort = PeekPlatformConfig.config.webSocketPort
         VortexFactory.createWebsocketServer(
             PeekPlatformConfig.componentName, webSocketPort)
+
+        desktopSitePort = PeekPlatformConfig.config.desktopSitePort
+        setupSite("Peek Desktop Site", root, desktopSitePort, enableLogin=False)
+        # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
 
     d.addCallback(startSite)
 

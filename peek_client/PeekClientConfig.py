@@ -39,13 +39,18 @@ class PeekClientConfig(PeekFileConfigABC,
 
     ### SERVER SECTION ###
     @property
-    def sitePort(self) -> int:
+    def mobileSitePort(self) -> int:
         with self._cfg as c:
-            return c.server.port(8000, require_integer)
+            return c.server.mobileSitePort(8000, require_integer)
 
     @property
     def webSocketPort(self) -> int:
         with self._cfg as c:
             return c.server.webSocketPort(8001, require_integer)
 
+
+    @property
+    def desktopSitePort(self) -> int:
+        with self._cfg as c:
+            return c.server.desktopSitePort(8002, require_integer)
 
