@@ -96,9 +96,16 @@ class ClientPluginLoader(PluginLoaderABC):
         PluginLoaderABC.unloadPlugin(self, pluginName)
 
         # Remove the Plugin resource tree
-        from peek_client.backend.SiteRootResource import root as serverRootResource
+        from peek_client.backend.SiteRootResource import mobileRoot
         try:
-            serverRootResource.deleteChild(pluginName.encode())
+            mobileRoot.deleteChild(pluginName.encode())
+        except KeyError:
+            pass
+
+        # Remove the Plugin resource tree
+        from peek_client.backend.SiteRootResource import desktopRoot
+        try:
+            desktopRoot.deleteChild(pluginName.encode())
         except KeyError:
             pass
 
@@ -121,7 +128,10 @@ class ClientPluginLoader(PluginLoaderABC):
 
         # Add all the resources required to serve the backend site
         # And all the plugin custom resources it may create
-        from peek_client.backend.SiteRootResource import root as serverRootResource
-        serverRootResource.putChild(pluginName.encode(), platformApi.rootResource)
+        from peek_client.backend.SiteRootResource import mobileRoot
+        mobileRoot.putChild(pluginName.encode(), platformApi.rootResource)
+
+        from peek_client.backend.SiteRootResource import desktopRoot
+        desktopRoot.putChild(pluginName.encode(), platformApi.rootResource)
 
         self._loadedPlugins[pluginName] = pluginMain
