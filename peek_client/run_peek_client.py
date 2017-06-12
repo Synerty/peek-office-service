@@ -116,15 +116,17 @@ def main():
     d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadAllPlugins())
 
     def startSite(_):
-        from peek_client.backend.SiteRootResource import setup as setupRoot
-        from peek_client.backend.SiteRootResource import root
-        setupRoot()
+        from peek_client.backend.SiteRootResource import setupMobile, mobileRoot
+        from peek_client.backend.SiteRootResource import setupDesktop, desktopRoot
+
+        setupMobile()
+        setupDesktop()
 
         # Create the vortex server
-        VortexFactory.createServer(PeekPlatformConfig.componentName, root)
+        VortexFactory.createServer(PeekPlatformConfig.componentName, mobileRoot)
 
         mobileSitePort = PeekPlatformConfig.config.mobileSitePort
-        setupSite("Peek Mobile Site", root, mobileSitePort, enableLogin=False)
+        setupSite("Peek Mobile Site", mobileRoot, mobileSitePort, enableLogin=False)
         # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
 
         webSocketPort = PeekPlatformConfig.config.webSocketPort
@@ -132,7 +134,7 @@ def main():
             PeekPlatformConfig.componentName, webSocketPort)
 
         desktopSitePort = PeekPlatformConfig.config.desktopSitePort
-        setupSite("Peek Desktop Site", root, desktopSitePort, enableLogin=False)
+        setupSite("Peek Desktop Site", desktopRoot, desktopSitePort, enableLogin=False)
         # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
 
     d.addCallback(startSite)
