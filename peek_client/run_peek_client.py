@@ -127,7 +127,6 @@ def main():
 
         mobileSitePort = PeekPlatformConfig.config.mobileSitePort
         setupSite("Peek Mobile Site", mobileRoot, mobileSitePort, enableLogin=False)
-        # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
 
         webSocketPort = PeekPlatformConfig.config.webSocketPort
         VortexFactory.createWebsocketServer(
@@ -135,7 +134,6 @@ def main():
 
         desktopSitePort = PeekPlatformConfig.config.desktopSitePort
         setupSite("Peek Desktop Site", desktopRoot, desktopSitePort, enableLogin=False)
-        # setupSite(8000, debug=True, protectedResource=HTTPAuthSessionWrapper())
 
     d.addCallback(startSite)
 
