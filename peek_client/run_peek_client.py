@@ -113,7 +113,8 @@ def main():
 
     # Load all Plugins
     d.addErrback(vortexLogFailure, logger, consumeError=True)
-    d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadAllPlugins())
+    d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadCorePlugins())
+    d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadOptionalPlugins())
 
     def startSite(_):
         from peek_client.backend.SiteRootResource import setupMobile, mobileRoot
@@ -145,9 +146,11 @@ def main():
     d.addErrback(vortexLogFailure, logger, consumeError=True)
     d.addCallback(startedSuccessfully)
 
-    reactor.addSystemEventTrigger('before', 'shutdown', VortexFactory.shutdown)
     reactor.addSystemEventTrigger('before', 'shutdown',
-                                  PeekPlatformConfig.pluginLoader.unloadAllPlugins)
+                                  PeekPlatformConfig.pluginLoader.unloadOptionalPlugins)
+    reactor.addSystemEventTrigger('before', 'shutdown',
+                                  PeekPlatformConfig.pluginLoader.unloadCorePlugins)
+    reactor.addSystemEventTrigger('before', 'shutdown', VortexFactory.shutdown)
 
     reactor.run()
 

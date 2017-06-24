@@ -14,7 +14,8 @@ PLUGIN_NOOP = "plugin_noop"
 
 class ClientPluginLoaderTest(unittest.TestCase):
     def testLoadAll(self):
-        clientPluginLoader.loadAllPlugins()
+        clientPluginLoader.loadCorePlugins()
+        clientPluginLoader.loadOptionalPlugins()
 
         logger.info(clientPluginLoader.listPlugins())
 

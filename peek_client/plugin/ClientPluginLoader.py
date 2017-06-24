@@ -36,11 +36,10 @@ class ClientPluginLoader(PluginLoaderABC):
     def _platformServiceNames(self) -> [str]:
         return ["client"]
 
-    def loadAllPlugins(self):
-        PluginLoaderABC.loadAllPlugins(self)
+    def loadOptionalPlugins(self):
+        PluginLoaderABC.loadOptionalPlugins(self)
 
         from peek_platform import PeekPlatformConfig
-        PeekPlatformConfig.config
 
         # --------------------
         # Prepare the Peek Mobile
@@ -114,7 +113,7 @@ class ClientPluginLoader(PluginLoaderABC):
                           pluginRootDir: str,
                           requiresService: Tuple[str, ...]) -> None:
         # Everyone gets their own instance of the plugin API
-        platformApi = PeekClientPlatformHook()
+        platformApi = PeekClientPlatformHook(pluginName)
 
         pluginMain = EntryHookClass(pluginName=pluginName,
                                     pluginRootDir=pluginRootDir,
@@ -129,9 +128,9 @@ class ClientPluginLoader(PluginLoaderABC):
         # Add all the resources required to serve the backend site
         # And all the plugin custom resources it may create
         from peek_client.backend.SiteRootResource import mobileRoot
-        mobileRoot.putChild(pluginName.encode(), platformApi.rootResource)
+        mobileRoot.putChild(pluginName.encode(), platformApi.rootSiteResource)
 
         from peek_client.backend.SiteRootResource import desktopRoot
-        desktopRoot.putChild(pluginName.encode(), platformApi.rootResource)
+        desktopRoot.putChild(pluginName.encode(), platformApi.rootSiteResource)
 
         self._loadedPlugins[pluginName] = pluginMain
