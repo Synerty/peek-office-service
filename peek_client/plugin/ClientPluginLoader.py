@@ -128,9 +128,9 @@ class ClientPluginLoader(PluginLoaderABC):
         # Add all the resources required to serve the backend site
         # And all the plugin custom resources it may create
         from peek_client.backend.SiteRootResource import mobileRoot
-        mobileRoot.putChild(pluginName.encode(), platformApi.rootSiteResource)
+        mobileRoot.putChild(pluginName.encode(), platformApi.rootMobileResource)
 
         from peek_client.backend.SiteRootResource import desktopRoot
-        desktopRoot.putChild(pluginName.encode(), platformApi.rootSiteResource)
+        desktopRoot.putChild(pluginName.encode(), platformApi.rootDesktopResource)
 
         self._loadedPlugins[pluginName] = pluginMain

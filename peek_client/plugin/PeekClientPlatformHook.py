@@ -2,14 +2,18 @@ from pathlib import Path
 from typing import Optional
 
 from peek_platform import PeekPlatformConfig
-from peek_plugin_base.PeekPlatformSiteHttpHookABC import PeekPlatformSiteHttpHookABC
 from peek_plugin_base.client.PeekClientPlatformHookABC import PeekClientPlatformHookABC
+from peek_plugin_base.client.PeekPlatformDesktopHttpHookABC import \
+    PeekPlatformDesktopHttpHookABC
+from peek_plugin_base.client.PeekPlatformMobileHttpHookABC import \
+    PeekPlatformMobileHttpHookABC
 
 
 class PeekClientPlatformHook(PeekClientPlatformHookABC):
 
     def __init__(self, pluginName: str):
-        PeekPlatformSiteHttpHookABC.__init__(self)
+        PeekPlatformMobileHttpHookABC.__init__(self)
+        PeekPlatformDesktopHttpHookABC.__init__(self)
         self._pluginName = pluginName
 
     def getOtherPluginApi(self, pluginName: str) -> Optional[object]:
