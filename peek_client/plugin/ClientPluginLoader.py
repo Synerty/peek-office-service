@@ -2,6 +2,7 @@ import logging
 from typing import Type, Tuple
 
 import os
+from twisted.internet.defer import inlineCallbacks
 
 from peek_client.plugin.PeekClientPlatformHook import PeekClientPlatformHook
 from peek_platform.frontend.NativescriptBuilder import NativescriptBuilder
@@ -36,8 +37,9 @@ class ClientPluginLoader(PluginLoaderABC):
     def _platformServiceNames(self) -> [str]:
         return ["client"]
 
+    @inlineCallbacks
     def loadOptionalPlugins(self):
-        PluginLoaderABC.loadOptionalPlugins(self)
+        yield PluginLoaderABC.loadOptionalPlugins(self)
 
         from peek_platform import PeekPlatformConfig
 
@@ -108,6 +110,7 @@ class ClientPluginLoader(PluginLoaderABC):
         except KeyError:
             pass
 
+    @inlineCallbacks
     def _loadPluginThrows(self, pluginName: str,
                           EntryHookClass: Type[PluginCommonEntryHookABC],
                           pluginRootDir: str,
@@ -120,10 +123,10 @@ class ClientPluginLoader(PluginLoaderABC):
                                     platform=platformApi)
 
         # Load the plugin
-        pluginMain.load()
+        yield pluginMain.load()
 
         # Start the Plugin
-        pluginMain.start()
+        yield pluginMain.start()
 
         # Add all the resources required to serve the backend site
         # And all the plugin custom resources it may create
