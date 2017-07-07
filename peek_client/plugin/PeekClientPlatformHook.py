@@ -10,6 +10,10 @@ from peek_plugin_base.client.PeekPlatformMobileHttpHookABC import \
 
 
 class PeekClientPlatformHook(PeekClientPlatformHookABC):
+    @property
+    def serviceId(self) -> str:
+        import socket
+        return "client|" + socket.gethostname()
 
     def __init__(self, pluginName: str):
         PeekPlatformMobileHttpHookABC.__init__(self)
