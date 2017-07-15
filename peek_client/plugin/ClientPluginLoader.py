@@ -114,7 +114,7 @@ class ClientPluginLoader(PluginLoaderABC):
     def _loadPluginThrows(self, pluginName: str,
                           EntryHookClass: Type[PluginCommonEntryHookABC],
                           pluginRootDir: str,
-                          requiresService: Tuple[str, ...]) -> None:
+                          requiresService: Tuple[str, ...]) -> PluginCommonEntryHookABC:
         # Everyone gets their own instance of the plugin API
         platformApi = PeekClientPlatformHook(pluginName)
 
@@ -124,9 +124,6 @@ class ClientPluginLoader(PluginLoaderABC):
 
         # Load the plugin
         yield pluginMain.load()
-
-        # Start the Plugin
-        yield pluginMain.start()
 
         # Add all the resources required to serve the backend site
         # And all the plugin custom resources it may create
