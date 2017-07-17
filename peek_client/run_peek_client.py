@@ -88,10 +88,11 @@ def main():
         from peek_platform import PeekPlatformConfig
         PeekPlatformConfig.peekSwInstallManager.restartProcess()
 
-    (VortexFactory.subscribeToVortexStatusChange(peekServerName)
-        .filter(lambda online:online == False)
-        .subscribe(on_next=restart)
-     )
+    def setupVortexOfflineSubscriber():
+        (VortexFactory.subscribeToVortexStatusChange(peekServerName)
+         .filter(lambda online: online == False)
+         .subscribe(on_next=restart)
+         )
 
     # First, setup the VortexServer Agent
     from peek_platform import PeekPlatformConfig
@@ -115,6 +116,9 @@ def main():
     d.addErrback(vortexLogFailure, logger, consumeError=True)
     d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadCorePlugins())
     d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadOptionalPlugins())
+
+    # Set this up after the plugins have loaded, it causes problems with the ng build
+    d.addCallback(lambda _: setupVortexOfflineSubscriber())
 
     def startSite(_):
         from peek_client.backend.SiteRootResource import setupMobile, mobileRoot
