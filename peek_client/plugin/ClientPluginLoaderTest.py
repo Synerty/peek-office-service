@@ -17,6 +17,9 @@ class ClientPluginLoaderTest(unittest.TestCase):
         clientPluginLoader.loadCorePlugins()
         clientPluginLoader.loadOptionalPlugins()
 
+        clientPluginLoader.startCorePlugins()
+        clientPluginLoader.startOptionalPlugins()
+
         logger.info(clientPluginLoader.listPlugins())
 
         for plugin in list(clientPluginLoader._loadedPlugins.values()):

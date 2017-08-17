@@ -117,6 +117,9 @@ def main():
     d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadCorePlugins())
     d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadOptionalPlugins())
 
+    d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.startCorePlugins())
+    d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.startOptionalPlugins())
+
     # Set this up after the plugins have loaded, it causes problems with the ng build
     d.addCallback(lambda _: setupVortexOfflineSubscriber())
 

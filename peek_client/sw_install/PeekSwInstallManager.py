@@ -18,4 +18,7 @@ class PeekSwInstallManager(PeekSwInstallManagerABC):
         PeekPlatformConfig.pluginLoader.loadCorePlugins()
         PeekPlatformConfig.pluginLoader.loadOptionalPlugins()
 
+        PeekPlatformConfig.pluginLoader.startCorePlugins()
+        PeekPlatformConfig.pluginLoader.startOptionalPlugins()
+
 

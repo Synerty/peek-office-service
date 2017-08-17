@@ -63,13 +63,13 @@ class ClientPluginLoader(PluginLoaderABC):
                                             "peek-mobile",
                                             PeekPlatformConfig.config,
                                             self._loadedPlugins.values())
-            nsBuilder.build()
+            yield nsBuilder.build()
 
             mobileWebBuilder = WebBuilder(mobileProjectDir,
                                           "peek-mobile",
                                           PeekPlatformConfig.config,
                                           self._loadedPlugins.values())
-            mobileWebBuilder.build()
+            yield mobileWebBuilder.build()
 
         # --------------------
         # Prepare the Peek Desktop
