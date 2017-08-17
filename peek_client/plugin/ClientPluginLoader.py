@@ -91,7 +91,7 @@ class ClientPluginLoader(PluginLoaderABC):
                                            "peek-desktop",
                                            PeekPlatformConfig.config,
                                            self._loadedPlugins.values())
-            desktopWebBuilder.build()
+            yield desktopWebBuilder.build()
 
     def unloadPlugin(self, pluginName: str):
         PluginLoaderABC.unloadPlugin(self, pluginName)
