@@ -45,6 +45,7 @@ setup(
     entry_points={
         'console_scripts': [
             'run_peek_client = peek_client.run_peek_client:main',
+            'run_peek_client_build_only = peek_client.run_peek_client_build_only:main',
             'winsvc_peek_client = peek_client.winsvc_peek_client:main',
         ],
     },
