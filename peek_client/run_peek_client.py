@@ -154,9 +154,15 @@ def main():
     d.addCallback(startedSuccessfully)
 
     reactor.addSystemEventTrigger('before', 'shutdown',
+                                  PeekPlatformConfig.pluginLoader.stopOptionalPlugins)
+    reactor.addSystemEventTrigger('before', 'shutdown',
+                                  PeekPlatformConfig.pluginLoader.stopCorePlugins)
+
+    reactor.addSystemEventTrigger('before', 'shutdown',
                                   PeekPlatformConfig.pluginLoader.unloadOptionalPlugins)
     reactor.addSystemEventTrigger('before', 'shutdown',
                                   PeekPlatformConfig.pluginLoader.unloadCorePlugins)
+
     reactor.addSystemEventTrigger('before', 'shutdown', VortexFactory.shutdown)
 
     reactor.run()
