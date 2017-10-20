@@ -12,14 +12,12 @@
  *
 """
 from pytmpdir.Directory import DirSettings
-from twisted.internet.defer import inlineCallbacks
-from txhttputil.site.FileUploadRequest import FileUploadRequest
-from txhttputil.site.SiteUtil import setupSite
-from txhttputil.util.DeferUtil import printFailure
-from txhttputil.util.LoggingUtil import setupLogging
-from vortex.DeferUtil import vortexLogFailure
 
 from peek_plugin_base.PeekVortexUtil import peekClientName, peekServerName
+from txhttputil.site.FileUploadRequest import FileUploadRequest
+from txhttputil.site.SiteUtil import setupSite
+from txhttputil.util.LoggingUtil import setupLogging
+from vortex.DeferUtil import vortexLogFailure
 from vortex.VortexFactory import VortexFactory
 
 setupLogging()
@@ -97,8 +95,8 @@ def main():
     # First, setup the VortexServer Agent
     from peek_platform import PeekPlatformConfig
     d = VortexFactory.createTcpClient(PeekPlatformConfig.componentName,
-                                       PeekPlatformConfig.config.peekServerHost,
-                                       PeekPlatformConfig.config.peekServerVortexTcpPort)
+                                      PeekPlatformConfig.config.peekServerHost,
+                                      PeekPlatformConfig.config.peekServerVortexTcpPort)
 
     # Start Update Handler,
     # Add both, The peek client might fail to connect, and if it does, the payload
@@ -110,7 +108,6 @@ def main():
 
     # Start client main data observer, this is not used by the plugins
     # (Initialised now, not as a callback)
-    from peek_client.backend import ClientObservable
 
     # Load all Plugins
     d.addErrback(vortexLogFailure, logger, consumeError=True)
@@ -130,18 +127,19 @@ def main():
         setupMobile()
         setupDesktop()
 
-        # Create the vortex server
+        # Create the mobile vortex server
         VortexFactory.createServer(PeekPlatformConfig.componentName, mobileRoot)
-
         mobileSitePort = PeekPlatformConfig.config.mobileSitePort
         setupSite("Peek Mobile Site", mobileRoot, mobileSitePort, enableLogin=False)
+
+        # Create the desktop vortex server
+        VortexFactory.createServer(PeekPlatformConfig.componentName, desktopRoot)
+        desktopSitePort = PeekPlatformConfig.config.desktopSitePort
+        setupSite("Peek Desktop Site", desktopRoot, desktopSitePort, enableLogin=False)
 
         webSocketPort = PeekPlatformConfig.config.webSocketPort
         VortexFactory.createWebsocketServer(
             PeekPlatformConfig.componentName, webSocketPort)
-
-        desktopSitePort = PeekPlatformConfig.config.desktopSitePort
-        setupSite("Peek Desktop Site", desktopRoot, desktopSitePort, enableLogin=False)
 
     d.addCallback(startSite)
 
