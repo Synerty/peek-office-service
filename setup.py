@@ -49,7 +49,7 @@ setup(
             'winsvc_peek_client = peek_client.winsvc_peek_client:main',
         ],
     },
-    install_requires=["peek-platform", "peek-mobile", "peek-desktop"],
+    install_requires=["peek-platform", "peek-mobile", "peek-desktop", "peek-doc-user"],
     zip_safe=False,version=package_version,
     description='Peek Platform - Client Service',
     author='Synerty',
