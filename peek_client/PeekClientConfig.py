@@ -61,5 +61,5 @@ class PeekClientConfig(PeekFileConfigABC,
     @property
     def docSitePort(self) -> int:
         with self._cfg as c:
-            return c.server.docSitePort(8003, require_integer)
+            return c.server.docSitePort(8005, require_integer)
 
