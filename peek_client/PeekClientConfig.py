@@ -17,6 +17,8 @@ import os
 
 from jsoncfg.value_mappers import require_integer
 from peek_platform.file_config.PeekFileConfigABC import PeekFileConfigABC
+from peek_platform.file_config.PeekFileConfigDocBuildMixin import \
+    PeekFileConfigDocBuildMixin
 from peek_platform.file_config.PeekFileConfigFrontendDirMixin import \
     PeekFileConfigFrontendDirMixin
 from peek_platform.file_config.PeekFileConfigOsMixin import PeekFileConfigOsMixin
@@ -32,7 +34,8 @@ class PeekClientConfig(PeekFileConfigABC,
                        PeekFileConfigPeekServerClientMixin,
                        PeekFileConfigPlatformMixin,
                        PeekFileConfigOsMixin,
-                       PeekFileConfigFrontendDirMixin):
+                       PeekFileConfigFrontendDirMixin,
+                       PeekFileConfigDocBuildMixin):
     """
     This class creates a basic client configuration
     """
@@ -53,4 +56,10 @@ class PeekClientConfig(PeekFileConfigABC,
     def desktopSitePort(self) -> int:
         with self._cfg as c:
             return c.server.desktopSitePort(8002, require_integer)
+
+
+    @property
+    def docSitePort(self) -> int:
+        with self._cfg as c:
+            return c.server.docSitePort(8003, require_integer)
 

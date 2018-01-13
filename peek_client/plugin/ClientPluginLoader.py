@@ -5,8 +5,9 @@ import os
 from twisted.internet.defer import inlineCallbacks
 
 from peek_client.plugin.PeekClientPlatformHook import PeekClientPlatformHook
-from peek_platform.frontend.NativescriptBuilder import NativescriptBuilder
-from peek_platform.frontend.WebBuilder import WebBuilder
+from peek_platform.build_doc.DocBuilder import DocBuilder
+from peek_platform.build_frontend.NativescriptBuilder import NativescriptBuilder
+from peek_platform.build_frontend.WebBuilder import WebBuilder
 from peek_platform.plugin.PluginLoaderABC import PluginLoaderABC
 from peek_plugin_base.PluginCommonEntryHookABC import PluginCommonEntryHookABC
 from peek_plugin_base.client.PluginClientEntryHookABC import PluginClientEntryHookABC
@@ -41,10 +42,17 @@ class ClientPluginLoader(PluginLoaderABC):
     def loadOptionalPlugins(self):
         yield PluginLoaderABC.loadOptionalPlugins(self)
 
-        from peek_platform import PeekPlatformConfig
+        yield from self._buildMobile()
 
+        yield from self._buildDesktop()
+
+        yield from self._buildDocs()
+
+    def _buildMobile(self):
         # --------------------
         # Prepare the Peek Mobile
+
+        from peek_platform import PeekPlatformConfig
 
         mobileProjectDir = None
         try:
@@ -53,7 +61,6 @@ class ClientPluginLoader(PluginLoaderABC):
 
         except:
             pass
-
         if not mobileProjectDir:
             logger.warning("Skipping builds of peek-mobile"
                            ", the package can not be imported")
@@ -71,8 +78,10 @@ class ClientPluginLoader(PluginLoaderABC):
                                           self._loadedPlugins.values())
             yield mobileWebBuilder.build()
 
+    def _buildDesktop(self):
         # --------------------
         # Prepare the Peek Desktop
+        from peek_platform import PeekPlatformConfig
 
         desktopProjectDir = None
         try:
@@ -81,7 +90,6 @@ class ClientPluginLoader(PluginLoaderABC):
 
         except:
             pass
-
         if not desktopProjectDir:
             logger.warning("Skipping builds of peek-desktop"
                            ", the package can not be imported")
@@ -92,6 +100,31 @@ class ClientPluginLoader(PluginLoaderABC):
                                            PeekPlatformConfig.config,
                                            self._loadedPlugins.values())
             yield desktopWebBuilder.build()
+
+    def _buildDocs(self):
+        # --------------------
+        # Prepare the User Docs
+        from peek_platform import PeekPlatformConfig
+
+        docProjectDir = None
+        try:
+            import peek_doc_user
+            docProjectDir = os.path.dirname(peek_doc_user.__file__)
+
+        except:
+
+            pass
+        if not docProjectDir:
+            logger.warning("Skipping builds of peek_doc_user-mobile"
+                           ", the package can not be imported")
+
+        else:
+
+            docBuilder = DocBuilder(docProjectDir,
+                                    "peek-doc-user",
+                                    PeekPlatformConfig.config,
+                                    self._loadedPlugins.values())
+            yield docBuilder.build()
 
     def unloadPlugin(self, pluginName: str):
         PluginLoaderABC.unloadPlugin(self, pluginName)

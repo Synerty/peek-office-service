@@ -123,9 +123,11 @@ def main():
     def startSite(_):
         from peek_client.backend.SiteRootResource import setupMobile, mobileRoot
         from peek_client.backend.SiteRootResource import setupDesktop, desktopRoot
+        from peek_client.backend.SiteRootResource import setupDocSite, docSiteRoot
 
         setupMobile()
         setupDesktop()
+        setupDocSite()
 
         # Create the mobile vortex server
         VortexFactory.createServer(PeekPlatformConfig.componentName, mobileRoot)
@@ -136,6 +138,10 @@ def main():
         VortexFactory.createServer(PeekPlatformConfig.componentName, desktopRoot)
         desktopSitePort = PeekPlatformConfig.config.desktopSitePort
         setupSite("Peek Desktop Site", desktopRoot, desktopSitePort, enableLogin=False)
+
+        # Create the documentation site vortex server
+        docSitePort = PeekPlatformConfig.config.docSitePort
+        setupSite("Peek User Documentation Site", docSiteRoot, docSitePort, enableLogin=False)
 
         webSocketPort = PeekPlatformConfig.config.webSocketPort
         VortexFactory.createWebsocketServer(
