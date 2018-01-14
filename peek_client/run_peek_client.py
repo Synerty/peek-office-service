@@ -22,7 +22,7 @@ from vortex.VortexFactory import VortexFactory
 
 setupLogging()
 
-from twisted.internet import reactor
+from twisted.internet import reactor, defer
 
 import logging
 
@@ -34,11 +34,6 @@ import logging
 #                   ).setLevel(logging.INFO)
 
 logger = logging.getLogger(__name__)
-
-# ------------------------------------------------------------------------------
-# Set the parallelism of the database and reactor
-reactor.suggestThreadPoolSize(10)
-
 
 def setupPlatform():
     from peek_platform import PeekPlatformConfig
@@ -62,6 +57,11 @@ def setupPlatform():
 
     # Set default logging level
     logging.root.setLevel(PeekPlatformConfig.config.loggingLevel)
+
+    if logging.root.level == logging.DEBUG:
+        defer.setDebugging(True)
+
+    reactor.suggestThreadPoolSize(PeekPlatformConfig.config.twistedThreadPoolSize)
 
     # Initialise the txhttputil Directory object
     DirSettings.defaultDirChmod = PeekPlatformConfig.config.DEFAULT_DIR_CHMOD
