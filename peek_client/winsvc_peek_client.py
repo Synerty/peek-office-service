@@ -1,5 +1,6 @@
 import platform
 
+import peek_client
 from peek_platform.sw_install.PeekSwInstallManagerABC import PeekSwInstallManagerABC
 from peek_platform.util.LogUtil import setupServiceLogOutput
 
@@ -18,7 +19,7 @@ from peek_client import run_peek_client
 
 class PeekSvc(win32serviceutil.ServiceFramework):
     _svc_name_ = "peek_client"
-    _svc_display_name_ = "Peek Client"
+    _svc_display_name_ = "Peek Client " + peek_client.__version__
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
