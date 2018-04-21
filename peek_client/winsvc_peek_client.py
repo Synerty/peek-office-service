@@ -48,7 +48,7 @@ class PeekSvc(win32serviceutil.ServiceFramework):
 # Patch the restart method for windows services
 class _Restart:
     def _restartProcess(self):
-        win32serviceutil.RestartService(PeekSvc._svc_name_)
+        reactor.callFromThread(reactor.stop)
 
 
 # Patch the restart call for windows
