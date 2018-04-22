@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class PeekSvc(win32serviceutil.ServiceFramework):
-    _svc_name_ = "peek_client"
+    _svc_name_ = "peek-client"
     _svc_display_name_ = "Peek Client "  # + peek_client.__version__
 
     def __init__(self, args):
@@ -29,16 +29,6 @@ class PeekSvc(win32serviceutil.ServiceFramework):
     def SvcDoRun(self):
         self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
         try:
-
-            # Patch the restart method for windows services
-            class _Restart:
-                def _restartProcess(self):
-                    reactor.callFromThread(reactor.stop)
-
-            # Patch the restart call for windows
-            from peek_platform.sw_install.PeekSwInstallManagerABC import \
-                PeekSwInstallManagerABC
-            PeekSwInstallManagerABC.restartProcess = _Restart._restartProcess
 
             reactor.callLater(1, self._notifyOfStart)
 
