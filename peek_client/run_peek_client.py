@@ -16,11 +16,11 @@ from pytmpdir.Directory import DirSettings
 from peek_plugin_base.PeekVortexUtil import peekClientName, peekServerName
 from txhttputil.site.FileUploadRequest import FileUploadRequest
 from txhttputil.site.SiteUtil import setupSite
-from txhttputil.util.LoggingUtil import setupLogging
+from peek_platform.util.LogUtil import setupPeekLogger
 from vortex.DeferUtil import vortexLogFailure
 from vortex.VortexFactory import VortexFactory
 
-setupLogging()
+setupPeekLogger(peekClientName)
 
 from twisted.internet import reactor, defer
 
@@ -169,9 +169,8 @@ def main():
 
     reactor.addSystemEventTrigger('before', 'shutdown', VortexFactory.shutdown)
 
-    return d
+    reactor.run()
 
 
 if __name__ == '__main__':
     main()
-    reactor.run()

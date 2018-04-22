@@ -15,10 +15,10 @@ from pytmpdir.Directory import DirSettings
 
 from peek_plugin_base.PeekVortexUtil import peekClientName
 from txhttputil.site.FileUploadRequest import FileUploadRequest
-from txhttputil.util.LoggingUtil import setupLogging
+from peek_platform.util.LogUtil import setupPeekLogger
 from vortex.DeferUtil import vortexLogFailure
 
-setupLogging()
+setupPeekLogger(peekClientName)
 
 from twisted.internet import reactor, defer
 
