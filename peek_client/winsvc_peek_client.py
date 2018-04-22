@@ -14,6 +14,7 @@ class PeekSvc(win32serviceutil.ServiceFramework):
     _svc_name_ = "peek-client"
     _svc_display_name_ = "Peek Client " + peek_client.__version__
     _exe_args_ = IS_WIN_SVC
+    _svc_deps_ = ["RpcSs"]
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
