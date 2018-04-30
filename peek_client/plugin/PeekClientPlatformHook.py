@@ -15,7 +15,7 @@ class PeekClientPlatformHook(PeekClientPlatformHookABC):
         import socket
         return "client|" + socket.gethostname()
 
-    def __init__(self, pluginName: str):
+    def __init__(self, pluginName: str) -> None:
         PeekPlatformMobileHttpHookABC.__init__(self)
         PeekPlatformDesktopHttpHookABC.__init__(self)
         self._pluginName = pluginName

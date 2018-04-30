@@ -5,7 +5,7 @@ from twisted.internet import reactor
 from twisted.internet.defer import Deferred
 from twisted.trial import unittest
 
-from .ClientPluginLoader import clientPluginLoader
+from .ClientPluginLoader import ClientPluginLoader
 
 logger = logging.getLogger(__name__)
 
@@ -14,15 +14,15 @@ PLUGIN_NOOP = "plugin_noop"
 
 class ClientPluginLoaderTest(unittest.TestCase):
     def testLoadAll(self):
-        clientPluginLoader.loadCorePlugins()
-        clientPluginLoader.loadOptionalPlugins()
+        ClientPluginLoader.loadCorePlugins()
+        ClientPluginLoader.loadOptionalPlugins()
 
-        clientPluginLoader.startCorePlugins()
-        clientPluginLoader.startOptionalPlugins()
+        ClientPluginLoader.startCorePlugins()
+        ClientPluginLoader.startOptionalPlugins()
 
-        logger.info(clientPluginLoader.listPlugins())
+        logger.info(ClientPluginLoader.listPlugins())
 
-        for plugin in list(clientPluginLoader._loadedPlugins.values()):
+        for plugin in list(ClientPluginLoader._loadedPlugins.values()):
             logger.info("configUrl = %s", plugin.configUrl())
 
         d = Deferred()
@@ -32,10 +32,10 @@ class ClientPluginLoaderTest(unittest.TestCase):
     def testUnregister(self):
         loadedModuleBefore = set(sys.modules)
 
-        clientPluginLoader.loadPlugin(PLUGIN_NOOP)
+        ClientPluginLoader.loadPlugin(PLUGIN_NOOP)
         self.assertTrue(PLUGIN_NOOP in sys.modules)
 
-        clientPluginLoader.unloadPlugin(PLUGIN_NOOP)
+        ClientPluginLoader.unloadPlugin(PLUGIN_NOOP)
 
         loadedModuleNow = set(sys.modules) - loadedModuleBefore
 
@@ -44,10 +44,10 @@ class ClientPluginLoaderTest(unittest.TestCase):
             self.assertFalse(PLUGIN_NOOP in modName)
 
     def testReRegister(self):
-        clientPluginLoader.loadPlugin(PLUGIN_NOOP)
-        clientPluginLoader.loadPlugin(PLUGIN_NOOP)
+        ClientPluginLoader.loadPlugin(PLUGIN_NOOP)
+        ClientPluginLoader.loadPlugin(PLUGIN_NOOP)
 
-        for plugin in list(clientPluginLoader._loadedPlugins.values()):
+        for plugin in list(ClientPluginLoader._loadedPlugins.values()):
             logger.info("configUrl = %s", plugin.configUrl())
 
         d = Deferred()
