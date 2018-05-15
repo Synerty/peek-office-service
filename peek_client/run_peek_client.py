@@ -103,8 +103,9 @@ def main():
     # sent from the peekSwUpdater will be queued and sent when it does connect.
     from peek_platform.sw_version.PeekSwVersionPollHandler import peekSwVersionPollHandler
 
-    d.addErrback(vortexLogFailure, logger, consumeError=True)
-    d.addCallback(lambda _: peekSwVersionPollHandler.start())
+    # Software update check is not a thing any more
+    # d.addErrback(vortexLogFailure, logger, consumeError=True)
+    # d.addCallback(lambda _: peekSwVersionPollHandler.start())
 
     # Start client main data observer, this is not used by the plugins
     # (Initialised now, not as a callback)
