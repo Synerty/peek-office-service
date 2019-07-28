@@ -13,14 +13,14 @@
  *
 """
 import logging
-import os
 
-from jsoncfg.value_mappers import require_integer
 from peek_platform.file_config.PeekFileConfigABC import PeekFileConfigABC
 from peek_platform.file_config.PeekFileConfigDocBuildMixin import \
     PeekFileConfigDocBuildMixin
 from peek_platform.file_config.PeekFileConfigFrontendDirMixin import \
     PeekFileConfigFrontendDirMixin
+from peek_platform.file_config.PeekFileConfigHttpServerMixin import \
+    PeekFileConfigHttpMixin
 from peek_platform.file_config.PeekFileConfigOsMixin import PeekFileConfigOsMixin
 from peek_platform.file_config.PeekFileConfigPeekServerClientMixin import \
     PeekFileConfigPeekServerClientMixin
@@ -40,26 +40,7 @@ class PeekClientConfig(PeekFileConfigABC,
     This class creates a basic client configuration
     """
 
-    ### SERVER SECTION ###
-    @property
-    def mobileSitePort(self) -> int:
-        with self._cfg as c:
-            return c.server.mobileSitePort(8000, require_integer)
-
-    @property
-    def webSocketPort(self) -> int:
-        with self._cfg as c:
-            return c.server.webSocketPort(8001, require_integer)
-
-
-    @property
-    def desktopSitePort(self) -> int:
-        with self._cfg as c:
-            return c.server.desktopSitePort(8002, require_integer)
-
-
-    @property
-    def docSitePort(self) -> int:
-        with self._cfg as c:
-            return c.server.docSitePort(8005, require_integer)
-
+    def __init__(self):
+        super().__init__()
+        self.fieldHttpServer = PeekFileConfigHttpMixin(self, "field", 8000)
+        self.officeHttpServer = PeekFileConfigHttpMixin(self, "office", 8002)

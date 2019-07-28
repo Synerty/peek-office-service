@@ -1,10 +1,11 @@
 import os
 
-from txhttputil.site.FileUnderlayResource import FileUnderlayResource
-
 from peek_platform import PeekPlatformConfig
+from txhttputil.site.FileUnderlayResource import FileUnderlayResource
+from vortex.VortexFactory import VortexFactory
 
 mobileRoot = FileUnderlayResource()
+
 
 def setupMobile():
     # Setup properties for serving the site
@@ -26,8 +27,12 @@ def setupMobile():
 
     mobileRoot.addFileSystemRoot(distDir)
 
+    addVortexServers(mobileRoot)
+    addDocSite(mobileRoot)
+
 
 desktopRoot = FileUnderlayResource()
+
 
 def setupDesktop():
     # Setup properties for serving the site
@@ -49,12 +54,24 @@ def setupDesktop():
 
     desktopRoot.addFileSystemRoot(distDir)
 
+    addVortexServers(desktopRoot)
+    addDocSite(desktopRoot)
 
 
-docSiteRoot = FileUnderlayResource()
+def addVortexServers(siteRootResource):
+    # Add the websocket to the site root
+    VortexFactory.createHttpWebsocketServer(
+        PeekPlatformConfig.componentName,
+        siteRootResource
+    )
 
-def setupDocSite():
+    # Add a HTTP vortex
+    # VortexFactory.createServer(PeekPlatformConfig.componentName, siteRootResource)
+
+
+def addDocSite(siteRootResource):
     # Setup properties for serving the site
+    docSiteRoot = FileUnderlayResource()
     docSiteRoot.enableSinglePageApplication()
 
     # This dist dir is automatically generated, but check it's parent
@@ -72,3 +89,5 @@ def setupDocSite():
     os.makedirs(distDir, exist_ok=True)
 
     docSiteRoot.addFileSystemRoot(distDir)
+
+    siteRootResource.putChild(b'docs', docSiteRoot)

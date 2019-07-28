@@ -105,7 +105,6 @@ def main():
     # Start Update Handler,
     # Add both, The peek client might fail to connect, and if it does, the payload
     # sent from the peekSwUpdater will be queued and sent when it does connect.
-    from peek_platform.sw_version.PeekSwVersionPollHandler import peekSwVersionPollHandler
 
     # Software update check is not a thing any more
     # d.addErrback(vortexLogFailure, logger, consumeError=True)
@@ -128,29 +127,30 @@ def main():
     def startSite(_):
         from peek_client.backend.SiteRootResource import setupMobile, mobileRoot
         from peek_client.backend.SiteRootResource import setupDesktop, desktopRoot
-        from peek_client.backend.SiteRootResource import setupDocSite, docSiteRoot
 
         setupMobile()
         setupDesktop()
-        setupDocSite()
 
         # Create the mobile vortex server
-        VortexFactory.createServer(PeekPlatformConfig.componentName, mobileRoot)
-        mobileSitePort = PeekPlatformConfig.config.mobileSitePort
-        setupSite("Peek Mobile Site", mobileRoot, mobileSitePort, enableLogin=False)
+        fieldHttpServer = PeekPlatformConfig.config.fieldHttpServer
+        setupSite("Peek Field Site",
+              mobileRoot,
+              portNum=fieldHttpServer.sitePort,
+              enableLogin=False,
+              redirectFromHttpPort=fieldHttpServer.redirectFromHttpPort,
+              sslCertFilePath=fieldHttpServer.sslCertFilePath,
+              sslKeyFilePath=fieldHttpServer.sslKeyFilePath)
 
         # Create the desktop vortex server
-        VortexFactory.createServer(PeekPlatformConfig.componentName, desktopRoot)
-        desktopSitePort = PeekPlatformConfig.config.desktopSitePort
-        setupSite("Peek Desktop Site", desktopRoot, desktopSitePort, enableLogin=False)
+        officeHttpServer = PeekPlatformConfig.config.officeHttpServer
+        setupSite("Peek Office Site",
+              desktopRoot,
+              portNum=officeHttpServer.sitePort,
+              enableLogin=False,
+              redirectFromHttpPort=officeHttpServer.redirectFromHttpPort,
+              sslCertFilePath=officeHttpServer.sslCertFilePath,
+              sslKeyFilePath=officeHttpServer.sslKeyFilePath)
 
-        # Create the documentation site vortex server
-        docSitePort = PeekPlatformConfig.config.docSitePort
-        setupSite("Peek User Documentation Site", docSiteRoot, docSitePort, enableLogin=False)
-
-        webSocketPort = PeekPlatformConfig.config.webSocketPort
-        VortexFactory.createWebsocketServer(
-            PeekPlatformConfig.componentName, webSocketPort)
 
     d.addCallback(startSite)
 
