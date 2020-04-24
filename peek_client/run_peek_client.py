@@ -11,12 +11,12 @@
  *  Synerty Pty Ltd
  *
 """
-from pytmpdir.Directory import DirSettings
-
+from peek_platform.util.LogUtil import setupPeekLogger, updatePeekLoggerHandlers, \
+    setupLoggingToSysloyServer
 from peek_plugin_base.PeekVortexUtil import peekClientName, peekServerName
+from pytmpdir.Directory import DirSettings
 from txhttputil.site.FileUploadRequest import FileUploadRequest
 from txhttputil.site.SiteUtil import setupSite
-from peek_platform.util.LogUtil import setupPeekLogger
 from vortex.DeferUtil import vortexLogFailure
 from vortex.VortexFactory import VortexFactory
 
@@ -34,6 +34,7 @@ import logging
 #                   ).setLevel(logging.INFO)
 
 logger = logging.getLogger(__name__)
+
 
 def setupPlatform():
     from peek_platform import PeekPlatformConfig
@@ -61,6 +62,14 @@ def setupPlatform():
 
     # Set default logging level
     logging.root.setLevel(PeekPlatformConfig.config.loggingLevel)
+    updatePeekLoggerHandlers(PeekPlatformConfig.componentName,
+                             PeekPlatformConfig.config.loggingRotateSizeMb,
+                             PeekPlatformConfig.config.loggingRotationsToKeep)
+
+    if PeekPlatformConfig.config.loggingLogToSyslogHost:
+        setupLoggingToSysloyServer(PeekPlatformConfig.config.loggingLogToSyslogHost,
+                                   PeekPlatformConfig.config.loggingLogToSyslogPort,
+                                   PeekPlatformConfig.config.loggingLogToSyslogFacility)
 
     # Enable deferred debugging if DEBUG is on.
     if logging.root.level == logging.DEBUG:
@@ -142,23 +151,22 @@ def main():
         # Create the mobile vortex server
         fieldHttpServer = PeekPlatformConfig.config.fieldHttpServer
         setupSite("Peek Field Site",
-              mobileRoot,
-              portNum=fieldHttpServer.sitePort,
-              enableLogin=False,
-              redirectFromHttpPort=fieldHttpServer.redirectFromHttpPort,
-              sslCertFilePath=fieldHttpServer.sslCertFilePath,
-              sslKeyFilePath=fieldHttpServer.sslKeyFilePath)
+                  mobileRoot,
+                  portNum=fieldHttpServer.sitePort,
+                  enableLogin=False,
+                  redirectFromHttpPort=fieldHttpServer.redirectFromHttpPort,
+                  sslCertFilePath=fieldHttpServer.sslCertFilePath,
+                  sslKeyFilePath=fieldHttpServer.sslKeyFilePath)
 
         # Create the desktop vortex server
         officeHttpServer = PeekPlatformConfig.config.officeHttpServer
         setupSite("Peek Office Site",
-              desktopRoot,
-              portNum=officeHttpServer.sitePort,
-              enableLogin=False,
-              redirectFromHttpPort=officeHttpServer.redirectFromHttpPort,
-              sslCertFilePath=officeHttpServer.sslCertFilePath,
-              sslKeyFilePath=officeHttpServer.sslKeyFilePath)
-
+                  desktopRoot,
+                  portNum=officeHttpServer.sitePort,
+                  enableLogin=False,
+                  redirectFromHttpPort=officeHttpServer.redirectFromHttpPort,
+                  sslCertFilePath=officeHttpServer.sslCertFilePath,
+                  sslKeyFilePath=officeHttpServer.sslKeyFilePath)
 
     d.addCallback(startSite)
 
