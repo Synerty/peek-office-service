@@ -156,8 +156,7 @@ def main():
                   portNum=fieldHttpServer.sitePort,
                   enableLogin=False,
                   redirectFromHttpPort=fieldHttpServer.redirectFromHttpPort,
-                  sslCertFilePath=fieldHttpServer.sslCertFilePath,
-                  sslKeyFilePath=fieldHttpServer.sslKeyFilePath)
+                  sslBundleFilePath=fieldHttpServer.sslBundleFilePath)
 
         # Create the desktop vortex server
         officeHttpServer = PeekPlatformConfig.config.officeHttpServer
@@ -166,8 +165,7 @@ def main():
                   portNum=officeHttpServer.sitePort,
                   enableLogin=False,
                   redirectFromHttpPort=officeHttpServer.redirectFromHttpPort,
-                  sslCertFilePath=officeHttpServer.sslCertFilePath,
-                  sslKeyFilePath=officeHttpServer.sslKeyFilePath)
+                  sslBundleFilePath=officeHttpServer.sslBundleFilePath)
 
     d.addCallback(startSite)
 
