@@ -15,7 +15,7 @@ def setupMobile():
 
     import peek_mobile
     frontendProjectDir = os.path.dirname(peek_mobile.__file__)
-    distDir = os.path.join(frontendProjectDir, 'build-web', 'dist')
+    distDir = os.path.join(frontendProjectDir, 'dist')
 
     distDirParent = os.path.dirname(distDir)
     if not os.path.isdir(distDirParent):
@@ -42,7 +42,7 @@ def setupDesktop():
 
     import peek_desktop
     frontendProjectDir = os.path.dirname(peek_desktop.__file__)
-    distDir = os.path.join(frontendProjectDir, 'build-web', 'dist')
+    distDir = os.path.join(frontendProjectDir, 'dist')
 
     distDirParent = os.path.dirname(distDir)
     if not os.path.isdir(distDirParent):

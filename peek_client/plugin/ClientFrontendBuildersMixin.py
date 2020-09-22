@@ -3,7 +3,6 @@ import logging
 import os
 
 from peek_platform.build_doc.DocBuilder import DocBuilder
-from peek_platform.build_frontend.NativescriptBuilder import NativescriptBuilder
 from peek_platform.build_frontend.WebBuilder import WebBuilder
 
 logger = logging.getLogger(__name__)
@@ -25,12 +24,6 @@ class ClientFrontendBuildersMixin:
             logger.warning("Skipping builds of peek-mobile"
                            ", the package can not be imported")
             return
-
-        nsBuilder = NativescriptBuilder(mobileProjectDir,
-                                        "peek-mobile",
-                                        PeekPlatformConfig.config,
-                                        loadedPlugins)
-        yield nsBuilder.build()
 
         mobileWebBuilder = WebBuilder(mobileProjectDir,
                                       "peek-mobile",
