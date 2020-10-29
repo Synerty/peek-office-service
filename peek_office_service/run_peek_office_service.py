@@ -30,7 +30,7 @@ import logging
 # Hide messages from vortex
 # logging.getLogger('txhttputil.vortex.VortexClient').setLevel(logging.INFO)
 
-# logging.getLogger('peek_client_pof.realtime.RealtimePollerEcomProtocol'
+# logging.getLogger('peek_office_service_pof.realtime.RealtimePollerEcomProtocol'
 #                   ).setLevel(logging.INFO)
 
 logger = logging.getLogger(__name__)
@@ -41,23 +41,23 @@ def setupPlatform():
     PeekPlatformConfig.componentName = peekClientName
 
     # Tell the platform classes about our instance of the PluginSwInstallManager
-    from peek_client.sw_install.PluginSwInstallManager import PluginSwInstallManager
+    from peek_office_service.sw_install.PluginSwInstallManager import PluginSwInstallManager
     PeekPlatformConfig.pluginSwInstallManager = PluginSwInstallManager()
 
     # Tell the platform classes about our instance of the PeekSwInstallManager
-    from peek_client.sw_install.PeekSwInstallManager import PeekSwInstallManager
+    from peek_office_service.sw_install.PeekSwInstallManager import PeekSwInstallManager
     PeekPlatformConfig.peekSwInstallManager = PeekSwInstallManager()
 
     # Tell the platform classes about our instance of the PeekLoaderBase
-    from peek_client.plugin.ClientPluginLoader import ClientPluginLoader
+    from peek_office_service.plugin.ClientPluginLoader import ClientPluginLoader
     PeekPlatformConfig.pluginLoader = ClientPluginLoader()
 
     # The config depends on the componentName, order is important
-    from peek_client.PeekClientConfig import PeekClientConfig
+    from peek_office_service.PeekClientConfig import PeekClientConfig
     PeekPlatformConfig.config = PeekClientConfig()
 
     # Update the version in the config file
-    from peek_client import __version__
+    from peek_office_service import __version__
     PeekPlatformConfig.config.platformVersion = __version__
 
     # Set default logging level
@@ -100,7 +100,7 @@ def main():
     setupPlatform()
 
     # Import remaining components
-    from peek_client import importPackages
+    from peek_office_service import importPackages
     importPackages()
 
     # Make the agent restart when the server restarts, or when it looses connection
@@ -143,8 +143,8 @@ def main():
     d.addCallback(lambda _: setupVortexOfflineSubscriber())
 
     def startSite(_):
-        from peek_client.backend.SiteRootResource import setupMobile, mobileRoot
-        from peek_client.backend.SiteRootResource import setupDesktop, desktopRoot
+        from peek_office_service.backend.SiteRootResource import setupMobile, mobileRoot
+        from peek_office_service.backend.SiteRootResource import setupDesktop, desktopRoot
 
         setupMobile()
         setupDesktop()

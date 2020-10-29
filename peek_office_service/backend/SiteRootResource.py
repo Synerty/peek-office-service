@@ -13,8 +13,8 @@ def setupMobile():
 
     # This dist dir is automatically generated, but check it's parent
 
-    import peek_mobile
-    frontendProjectDir = os.path.dirname(peek_mobile.__file__)
+    import peek_field_app
+    frontendProjectDir = os.path.dirname(peek_field_app.__file__)
     distDir = os.path.join(frontendProjectDir, 'dist')
 
     distDirParent = os.path.dirname(distDir)
@@ -40,8 +40,8 @@ def setupDesktop():
 
     # This dist dir is automatically generated, but check it's parent
 
-    import peek_desktop
-    frontendProjectDir = os.path.dirname(peek_desktop.__file__)
+    import peek_office_app
+    frontendProjectDir = os.path.dirname(peek_office_app.__file__)
     distDir = os.path.join(frontendProjectDir, 'dist')
 
     distDirParent = os.path.dirname(distDir)

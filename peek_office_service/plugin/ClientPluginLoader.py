@@ -3,8 +3,8 @@ from typing import Type, Tuple, List
 
 from twisted.internet.defer import inlineCallbacks
 
-from peek_client.plugin.ClientFrontendBuildersMixin import ClientFrontendBuildersMixin
-from peek_client.plugin.PeekClientPlatformHook import PeekClientPlatformHook
+from peek_office_service.plugin.ClientFrontendBuildersMixin import ClientFrontendBuildersMixin
+from peek_office_service.plugin.PeekClientPlatformHook import PeekClientPlatformHook
 from peek_platform.plugin.PluginLoaderABC import PluginLoaderABC
 from peek_plugin_base.PluginCommonEntryHookABC import PluginCommonEntryHookABC
 from peek_plugin_base.client.PluginClientEntryHookABC import PluginClientEntryHookABC
@@ -49,14 +49,14 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
         PluginLoaderABC.unloadPlugin(self, pluginName)
 
         # Remove the Plugin resource tree
-        from peek_client.backend.SiteRootResource import mobileRoot
+        from peek_office_service.backend.SiteRootResource import mobileRoot
         try:
             mobileRoot.deleteChild(pluginName.encode())
         except KeyError:
             pass
 
         # Remove the Plugin resource tree
-        from peek_client.backend.SiteRootResource import desktopRoot
+        from peek_office_service.backend.SiteRootResource import desktopRoot
         try:
             desktopRoot.deleteChild(pluginName.encode())
         except KeyError:
@@ -79,10 +79,10 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
 
         # Add all the resources required to serve the backend site
         # And all the plugin custom resources it may create
-        from peek_client.backend.SiteRootResource import mobileRoot
+        from peek_office_service.backend.SiteRootResource import mobileRoot
         mobileRoot.putChild(pluginName.encode(), platformApi.rootMobileResource)
 
-        from peek_client.backend.SiteRootResource import desktopRoot
+        from peek_office_service.backend.SiteRootResource import desktopRoot
         desktopRoot.putChild(pluginName.encode(), platformApi.rootDesktopResource)
 
         self._loadedPlugins[pluginName] = pluginMain

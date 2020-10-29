@@ -2,8 +2,8 @@ import os
 import shutil
 from setuptools import setup
 
-pip_package_name = "peek-client"
-py_package_name = "peek_client"
+pip_package_name = "peek-office-service"
+py_package_name = "peek_office_service"
 
 package_version = '0.0.0'
 
@@ -44,12 +44,12 @@ setup(
     package_data={'': package_files},
     entry_points={
         'console_scripts': [
-            'run_peek_client = peek_client.run_peek_client:main',
-            'run_peek_client_build_only = peek_client.run_peek_client_build_only:main',
-            'winsvc_peek_client = peek_client.winsvc_peek_client:main',
+            'run_peek_office_service = peek_office_service.run_peek_office_service:main',
+            'run_peek_office_service_build_only = peek_office_service.run_peek_office_service_build_only:main',
+            'winsvc_peek_office_service = peek_office_service.winsvc_peek_office_service:main',
         ],
     },
-    install_requires=["peek-platform", "peek-mobile", "peek-desktop", "peek-doc-user"],
+    install_requires=["peek-platform", "peek-field-app", "peek-office-app", "peek-doc-user"],
     zip_safe=False,version=package_version,
     description='Peek Platform - Client Service',
     author='Synerty',

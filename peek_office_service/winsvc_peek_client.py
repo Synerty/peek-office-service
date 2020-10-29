@@ -4,15 +4,15 @@ import win32service
 import win32serviceutil
 from twisted.internet import reactor
 
-import peek_client
+import peek_office_service
 from peek_platform.sw_install.PeekSwInstallManagerABC import IS_WIN_SVC
 
 logger = logging.getLogger(__name__)
 
 
 class PeekSvc(win32serviceutil.ServiceFramework):
-    _svc_name_ = "peek-client"
-    _svc_display_name_ = "Peek Client " + peek_client.__version__
+    _svc_name_ = "peek-office-service"
+    _svc_display_name_ = "Peek Client " + peek_office_service.__version__
     _exe_args_ = IS_WIN_SVC
     _svc_deps_ = ["RpcSs"]
 
@@ -37,8 +37,8 @@ class PeekSvc(win32serviceutil.ServiceFramework):
 
             reactor.callLater(1, self._notifyOfStart)
 
-            from peek_client import run_peek_client
-            run_peek_client.main()
+            from peek_office_service import run_peek_office_service
+            run_peek_office_service.main()
 
         except Exception as e:
             logger.exception(e)
