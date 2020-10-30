@@ -25,11 +25,11 @@ class ClientFrontendBuildersMixin:
                            ", the package can not be imported")
             return
 
-        mobileWebBuilder = WebBuilder(mobileProjectDir,
+        fieldWebBuilder = WebBuilder(mobileProjectDir,
                                       "peek-field-app",
                                       PeekPlatformConfig.config,
                                       loadedPlugins)
-        yield mobileWebBuilder.build()
+        yield fieldWebBuilder.build()
 
     def _buildDesktop(self, loadedPlugins):
         # --------------------
@@ -45,11 +45,11 @@ class ClientFrontendBuildersMixin:
                            ", the package can not be imported")
             return
 
-        desktopWebBuilder = WebBuilder(desktopProjectDir,
+        officeWebBuilder = WebBuilder(desktopProjectDir,
                                        "peek-office-app",
                                        PeekPlatformConfig.config,
                                        loadedPlugins)
-        yield desktopWebBuilder.build()
+        yield officeWebBuilder.build()
 
     def _buildDocs(self, loadedPlugins):
         # --------------------

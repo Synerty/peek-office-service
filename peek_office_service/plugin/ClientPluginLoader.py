@@ -33,7 +33,7 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
 
     @property
     def _platformServiceNames(self) -> List[str]:
-        return ["client"]
+        return ["office", "field"]
 
     @inlineCallbacks
     def loadOptionalPlugins(self):
