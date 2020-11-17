@@ -143,25 +143,14 @@ def main():
     d.addCallback(lambda _: setupVortexOfflineSubscriber())
 
     def startSite(_):
-        from peek_office_service.backend.SiteRootResource import setupMobile, mobileRoot
-        from peek_office_service.backend.SiteRootResource import setupDesktop, desktopRoot
+        from peek_office_service.backend.SiteRootResource import setupOffice, officeRoot
 
-        setupMobile()
-        setupDesktop()
-
-        # Create the mobile vortex server
-        fieldHttpServer = PeekPlatformConfig.config.fieldHttpServer
-        setupSite("Peek Field Site",
-                  mobileRoot,
-                  portNum=fieldHttpServer.sitePort,
-                  enableLogin=False,
-                  redirectFromHttpPort=fieldHttpServer.redirectFromHttpPort,
-                  sslBundleFilePath=fieldHttpServer.sslBundleFilePath)
+        setupOffice()
 
         # Create the desktop vortex server
         officeHttpServer = PeekPlatformConfig.config.officeHttpServer
         setupSite("Peek Office Site",
-                  desktopRoot,
+                  officeRoot,
                   portNum=officeHttpServer.sitePort,
                   enableLogin=False,
                   redirectFromHttpPort=officeHttpServer.redirectFromHttpPort,
@@ -170,7 +159,7 @@ def main():
     d.addCallback(startSite)
 
     def startedSuccessfully(_):
-        logger.info('Peek Client is running, version=%s',
+        logger.info('Peek Office is running, version=%s',
                     PeekPlatformConfig.config.platformVersion)
         return _
 

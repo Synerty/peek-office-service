@@ -42,5 +42,4 @@ class PeekClientConfig(PeekFileConfigABC,
 
     def __init__(self):
         super().__init__()
-        self.fieldHttpServer = PeekFileConfigHttpMixin(self, "field", 8000)
         self.officeHttpServer = PeekFileConfigHttpMixin(self, "office", 8002)
