@@ -33,7 +33,7 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
 
     @property
     def _platformServiceNames(self) -> List[str]:
-        return ["office", "field"]
+        return ["office"]
 
     @inlineCallbacks
     def loadOptionalPlugins(self):
@@ -49,16 +49,9 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
         PluginLoaderABC.unloadPlugin(self, pluginName)
 
         # Remove the Plugin resource tree
-        from peek_office_service.backend.SiteRootResource import mobileRoot
+        from peek_office_service.backend.SiteRootResource import officeRoot
         try:
-            mobileRoot.deleteChild(pluginName.encode())
-        except KeyError:
-            pass
-
-        # Remove the Plugin resource tree
-        from peek_office_service.backend.SiteRootResource import desktopRoot
-        try:
-            desktopRoot.deleteChild(pluginName.encode())
+            officeRoot.deleteChild(pluginName.encode())
         except KeyError:
             pass
 
@@ -79,10 +72,7 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
 
         # Add all the resources required to serve the backend site
         # And all the plugin custom resources it may create
-        from peek_office_service.backend.SiteRootResource import mobileRoot
-        mobileRoot.putChild(pluginName.encode(), platformApi.rootMobileResource)
-
-        from peek_office_service.backend.SiteRootResource import desktopRoot
-        desktopRoot.putChild(pluginName.encode(), platformApi.rootDesktopResource)
+        from peek_office_service.backend.SiteRootResource import officeRoot
+        officeRoot.putChild(pluginName.encode(), platformApi.rootDesktopResource)
 
         self._loadedPlugins[pluginName] = pluginMain

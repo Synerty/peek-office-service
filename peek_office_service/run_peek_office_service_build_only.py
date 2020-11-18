@@ -93,7 +93,7 @@ def main():
     d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadOptionalPlugins())
 
     def startedSuccessfully(_):
-        logger.info('Peek Client is running, version=%s',
+        logger.info('Peek Office is running, version=%s',
                     PeekPlatformConfig.config.platformVersion)
         return _
 

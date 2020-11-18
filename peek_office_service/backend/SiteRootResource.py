@@ -4,39 +4,13 @@ from peek_platform import PeekPlatformConfig
 from txhttputil.site.FileUnderlayResource import FileUnderlayResource
 from vortex.VortexFactory import VortexFactory
 
-mobileRoot = FileUnderlayResource()
+
+officeRoot = FileUnderlayResource()
 
 
-def setupMobile():
+def setupOffice():
     # Setup properties for serving the site
-    mobileRoot.enableSinglePageApplication()
-
-    # This dist dir is automatically generated, but check it's parent
-
-    import peek_field_app
-    frontendProjectDir = os.path.dirname(peek_field_app.__file__)
-    distDir = os.path.join(frontendProjectDir, 'dist')
-
-    distDirParent = os.path.dirname(distDir)
-    if not os.path.isdir(distDirParent):
-        raise NotADirectoryError(distDirParent)
-
-    # Make the dist dir, otherwise addFileSystemRoot throws an exception.
-    # It rebuilds at a later date
-    os.makedirs(distDir, exist_ok=True)
-
-    mobileRoot.addFileSystemRoot(distDir)
-
-    addVortexServers(mobileRoot)
-    addDocSite(mobileRoot)
-
-
-desktopRoot = FileUnderlayResource()
-
-
-def setupDesktop():
-    # Setup properties for serving the site
-    desktopRoot.enableSinglePageApplication()
+    officeRoot.enableSinglePageApplication()
 
     # This dist dir is automatically generated, but check it's parent
 
@@ -52,10 +26,10 @@ def setupDesktop():
     # It rebuilds at a later date
     os.makedirs(distDir, exist_ok=True)
 
-    desktopRoot.addFileSystemRoot(distDir)
+    officeRoot.addFileSystemRoot(distDir)
 
-    addVortexServers(desktopRoot)
-    addDocSite(desktopRoot)
+    addVortexServers(officeRoot)
+    addDocSite(officeRoot)
 
 
 def addVortexServers(siteRootResource):

@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class PeekSvc(win32serviceutil.ServiceFramework):
     _svc_name_ = "peek-office-service"
-    _svc_display_name_ = "Peek Client " + peek_office_service.__version__
+    _svc_display_name_ = "Peek Office " + peek_office_service.__version__
     _exe_args_ = IS_WIN_SVC
     _svc_deps_ = ["RpcSs"]
 

@@ -17,19 +17,19 @@ class ClientFrontendBuildersMixin:
         from peek_platform import PeekPlatformConfig
 
         try:
-            import peek_field_app
-            mobileProjectDir = os.path.dirname(peek_field_app.__file__)
+            import peek_office_app
+            mobileProjectDir = os.path.dirname(peek_office_app.__file__)
 
         except:
-            logger.warning("Skipping builds of peek-field-app"
+            logger.warning("Skipping builds of peek-office-app"
                            ", the package can not be imported")
             return
 
-        fieldWebBuilder = WebBuilder(mobileProjectDir,
-                                      "peek-field-app",
+        officeWebBuilder = WebBuilder(mobileProjectDir,
+                                      "peek-office-app",
                                       PeekPlatformConfig.config,
                                       loadedPlugins)
-        yield fieldWebBuilder.build()
+        yield officeWebBuilder.build()
 
     def _buildDesktop(self, loadedPlugins):
         # --------------------
