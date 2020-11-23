@@ -73,6 +73,6 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
         # Add all the resources required to serve the backend site
         # And all the plugin custom resources it may create
         from peek_office_service.backend.SiteRootResource import officeRoot
-        officeRoot.putChild(pluginName.encode(), platformApi.rootDesktopResource)
+        officeRoot.putChild(pluginName.encode(), platformApi.rootOfficeResource)
 
         self._loadedPlugins[pluginName] = pluginMain

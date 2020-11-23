@@ -3,10 +3,10 @@ from typing import Optional
 
 from peek_platform import PeekPlatformConfig
 from peek_plugin_base.client.PeekClientPlatformHookABC import PeekClientPlatformHookABC
-from peek_plugin_base.client.PeekPlatformDesktopHttpHookABC import \
-    PeekPlatformDesktopHttpHookABC
-from peek_plugin_base.client.PeekPlatformMobileHttpHookABC import \
-    PeekPlatformMobileHttpHookABC
+from peek_plugin_base.client.PeekPlatformOfficeHttpHookABC import \
+    PeekPlatformOfficeHttpHookABC
+from peek_plugin_base.client.PeekPlatformFieldHttpHookABC import \
+    PeekPlatformFieldHttpHookABC
 
 
 class PeekClientPlatformHook(PeekClientPlatformHookABC):
@@ -16,8 +16,8 @@ class PeekClientPlatformHook(PeekClientPlatformHookABC):
         return "client|" + socket.gethostname()
 
     def __init__(self, pluginName: str) -> None:
-        PeekPlatformMobileHttpHookABC.__init__(self)
-        PeekPlatformDesktopHttpHookABC.__init__(self)
+        PeekPlatformFieldHttpHookABC.__init__(self)
+        PeekPlatformOfficeHttpHookABC.__init__(self)
         self._pluginName = pluginName
 
     def getOtherPluginApi(self, pluginName: str) -> Optional[object]:
