@@ -25,7 +25,7 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
 
     @property
     def _entryHookFuncName(self) -> str:
-        return "peekClientEntryHook"
+        return "peekOfficeEntryHook"
 
     @property
     def _entryHookClassType(self):
