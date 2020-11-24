@@ -13,14 +13,14 @@
 """
 from peek_platform.util.LogUtil import setupPeekLogger, updatePeekLoggerHandlers, \
     setupLoggingToSysloyServer
-from peek_plugin_base.PeekVortexUtil import peekClientName, peekServerName
+from peek_plugin_base.PeekVortexUtil import peekOfficeName, peekServerName
 from pytmpdir.Directory import DirSettings
 from txhttputil.site.FileUploadRequest import FileUploadRequest
 from txhttputil.site.SiteUtil import setupSite
 from vortex.DeferUtil import vortexLogFailure
 from vortex.VortexFactory import VortexFactory
 
-setupPeekLogger(peekClientName)
+setupPeekLogger(peekOfficeName)
 
 from twisted.internet import reactor, defer
 
@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 def setupPlatform():
     from peek_platform import PeekPlatformConfig
-    PeekPlatformConfig.componentName = peekClientName
+    PeekPlatformConfig.componentName = peekOfficeName
 
     # Tell the platform classes about our instance of the PluginSwInstallManager
     from peek_office_service.sw_install.PluginSwInstallManager import PluginSwInstallManager

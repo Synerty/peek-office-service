@@ -13,12 +13,12 @@
 """
 from pytmpdir.Directory import DirSettings
 
-from peek_plugin_base.PeekVortexUtil import peekClientName
+from peek_plugin_base.PeekVortexUtil import peekOfficeName
 from txhttputil.site.FileUploadRequest import FileUploadRequest
 from peek_platform.util.LogUtil import setupPeekLogger
 from vortex.DeferUtil import vortexLogFailure
 
-setupPeekLogger(peekClientName)
+setupPeekLogger(peekOfficeName)
 
 from twisted.internet import reactor, defer
 
@@ -41,7 +41,7 @@ from peek_platform import PeekPlatformConfig
 
 
 def setupPlatform():
-    PeekPlatformConfig.componentName = peekClientName
+    PeekPlatformConfig.componentName = peekOfficeName
 
     # Tell the platform classes about our instance of the PluginSwInstallManager
     from peek_office_service.sw_install.PluginSwInstallManager import PluginSwInstallManager
