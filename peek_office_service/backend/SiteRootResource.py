@@ -50,8 +50,8 @@ def addDocSite(siteRootResource):
 
     # This dist dir is automatically generated, but check it's parent
 
-    import peek_doc_user
-    docProjectDir = os.path.dirname(peek_doc_user.__file__)
+    import peek_office_doc
+    docProjectDir = os.path.dirname(peek_office_doc.__file__)
     distDir = os.path.join(docProjectDir, 'doc_dist')
 
     distDirParent = os.path.dirname(distDir)
