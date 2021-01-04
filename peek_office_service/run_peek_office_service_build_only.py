@@ -44,23 +44,30 @@ def setupPlatform():
     PeekPlatformConfig.componentName = peekOfficeName
 
     # Tell the platform classes about our instance of the PluginSwInstallManager
-    from peek_office_service.sw_install.PluginSwInstallManager import PluginSwInstallManager
+    from peek_office_service.sw_install.PluginSwInstallManager import (
+        PluginSwInstallManager,
+    )
+
     PeekPlatformConfig.pluginSwInstallManager = PluginSwInstallManager()
 
     # Tell the platform classes about our instance of the PeekSwInstallManager
     from peek_office_service.sw_install.PeekSwInstallManager import PeekSwInstallManager
+
     PeekPlatformConfig.peekSwInstallManager = PeekSwInstallManager()
 
     # Tell the platform classes about our instance of the PeekLoaderBase
     from peek_office_service.plugin.ClientPluginLoader import ClientPluginLoader
+
     PeekPlatformConfig.pluginLoader = ClientPluginLoader()
 
     # The config depends on the componentName, order is important
     from peek_office_service.PeekClientConfig import PeekClientConfig
+
     PeekPlatformConfig.config = PeekClientConfig()
 
     # Update the version in the config file
     from peek_office_service import __version__
+
     PeekPlatformConfig.config.platformVersion = __version__
 
     # Set default logging level
@@ -82,6 +89,7 @@ def main():
 
     # Import remaining components
     from peek_office_service import importPackages
+
     importPackages()
 
     # Start client main data observer, this is not used by the plugins
@@ -93,20 +101,24 @@ def main():
     d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadOptionalPlugins())
 
     def startedSuccessfully(_):
-        logger.info('Peek Office is running, version=%s',
-                    PeekPlatformConfig.config.platformVersion)
+        logger.info(
+            "Peek Office is running, version=%s",
+            PeekPlatformConfig.config.platformVersion,
+        )
         return _
 
     d.addErrback(vortexLogFailure, logger, consumeError=True)
     d.addCallback(startedSuccessfully)
 
-    reactor.addSystemEventTrigger('before', 'shutdown',
-                                  PeekPlatformConfig.pluginLoader.unloadOptionalPlugins)
-    reactor.addSystemEventTrigger('before', 'shutdown',
-                                  PeekPlatformConfig.pluginLoader.unloadCorePlugins)
+    reactor.addSystemEventTrigger(
+        "before", "shutdown", PeekPlatformConfig.pluginLoader.unloadOptionalPlugins
+    )
+    reactor.addSystemEventTrigger(
+        "before", "shutdown", PeekPlatformConfig.pluginLoader.unloadCorePlugins
+    )
 
     reactor.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

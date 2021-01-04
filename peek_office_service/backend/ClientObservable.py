@@ -9,6 +9,7 @@ peekClientObservableName = "peek_office_service"
 observable = TupleDataObservableHandler(
     observableName=peekClientObservableName,
     additionalFilt={"plugin": "peek_office_service"},
-    subscriptionsEnabled=True)
+    subscriptionsEnabled=True,
+)
 
 # observable.addTupleProvider(PluginAppTileTuple.tupleName(), HomeAppTileTupleProvider())

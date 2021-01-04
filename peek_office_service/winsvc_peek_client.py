@@ -19,7 +19,7 @@ class PeekSvc(win32serviceutil.ServiceFramework):
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
 
-        reactor.addSystemEventTrigger('after', 'shutdown', self._notifyOfStop)
+        reactor.addSystemEventTrigger("after", "shutdown", self._notifyOfStop)
 
     def _notifyOfStop(self):
         self.ReportServiceStatus(win32service.SERVICE_STOPPED)
@@ -38,6 +38,7 @@ class PeekSvc(win32serviceutil.ServiceFramework):
             reactor.callLater(1, self._notifyOfStart)
 
             from peek_office_service import run_peek_office_service
+
             run_peek_office_service.main()
 
         except Exception as e:
@@ -49,5 +50,5 @@ def main():
     win32serviceutil.HandleCommandLine(PeekSvc)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

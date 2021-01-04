@@ -3,7 +3,9 @@ from typing import Type, Tuple, List
 
 from twisted.internet.defer import inlineCallbacks
 
-from peek_office_service.plugin.ClientFrontendBuildersMixin import ClientFrontendBuildersMixin
+from peek_office_service.plugin.ClientFrontendBuildersMixin import (
+    ClientFrontendBuildersMixin,
+)
 from peek_office_service.plugin.PeekClientPlatformHook import PeekClientPlatformHook
 from peek_platform.plugin.PluginLoaderABC import PluginLoaderABC
 from peek_plugin_base.PluginCommonEntryHookABC import PluginCommonEntryHookABC
@@ -16,7 +18,9 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
     _instance = None
 
     def __new__(cls, *args, **kwargs):
-        assert cls._instance is None, "ClientPluginLoader is a singleton, don't construct it"
+        assert (
+            cls._instance is None
+        ), "ClientPluginLoader is a singleton, don't construct it"
         cls._instance = PluginLoaderABC.__new__(cls)
         return cls._instance
 
@@ -50,22 +54,26 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
 
         # Remove the Plugin resource tree
         from peek_office_service.backend.SiteRootResource import officeRoot
+
         try:
             officeRoot.deleteChild(pluginName.encode())
         except KeyError:
             pass
 
     @inlineCallbacks
-    def _loadPluginThrows(self, pluginName: str,
-                          EntryHookClass: Type[PluginCommonEntryHookABC],
-                          pluginRootDir: str,
-                          requiresService: Tuple[str, ...]) -> PluginCommonEntryHookABC:
+    def _loadPluginThrows(
+        self,
+        pluginName: str,
+        EntryHookClass: Type[PluginCommonEntryHookABC],
+        pluginRootDir: str,
+        requiresService: Tuple[str, ...],
+    ) -> PluginCommonEntryHookABC:
         # Everyone gets their own instance of the plugin API
         platformApi = PeekClientPlatformHook(pluginName)
 
-        pluginMain = EntryHookClass(pluginName=pluginName,
-                                    pluginRootDir=pluginRootDir,
-                                    platform=platformApi)
+        pluginMain = EntryHookClass(
+            pluginName=pluginName, pluginRootDir=pluginRootDir, platform=platformApi
+        )
 
         # Load the plugin
         yield pluginMain.load()
@@ -73,6 +81,7 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
         # Add all the resources required to serve the backend site
         # And all the plugin custom resources it may create
         from peek_office_service.backend.SiteRootResource import officeRoot
+
         officeRoot.putChild(pluginName.encode(), platformApi.rootOfficeResource)
 
         self._loadedPlugins[pluginName] = pluginMain

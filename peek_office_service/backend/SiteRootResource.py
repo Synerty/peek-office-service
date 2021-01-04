@@ -4,7 +4,6 @@ from peek_platform import PeekPlatformConfig
 from txhttputil.site.FileUnderlayResource import FileUnderlayResource
 from vortex.VortexFactory import VortexFactory
 
-
 officeRoot = FileUnderlayResource()
 
 
@@ -15,8 +14,9 @@ def setupOffice():
     # This dist dir is automatically generated, but check it's parent
 
     import peek_office_app
+
     frontendProjectDir = os.path.dirname(peek_office_app.__file__)
-    distDir = os.path.join(frontendProjectDir, 'dist')
+    distDir = os.path.join(frontendProjectDir, "dist")
 
     distDirParent = os.path.dirname(distDir)
     if not os.path.isdir(distDirParent):
@@ -35,8 +35,7 @@ def setupOffice():
 def addVortexServers(siteRootResource):
     # Add the websocket to the site root
     VortexFactory.createHttpWebsocketServer(
-        PeekPlatformConfig.componentName,
-        siteRootResource
+        PeekPlatformConfig.componentName, siteRootResource
     )
 
     # Add a HTTP vortex
@@ -51,8 +50,9 @@ def addDocSite(siteRootResource):
     # This dist dir is automatically generated, but check it's parent
 
     import peek_office_doc
+
     docProjectDir = os.path.dirname(peek_office_doc.__file__)
-    distDir = os.path.join(docProjectDir, 'doc_dist')
+    distDir = os.path.join(docProjectDir, "doc_dist")
 
     distDirParent = os.path.dirname(distDir)
     if not os.path.isdir(distDirParent):
@@ -64,4 +64,4 @@ def addDocSite(siteRootResource):
 
     docSiteRoot.addFileSystemRoot(distDir)
 
-    siteRootResource.putChild(b'docs', docSiteRoot)
+    siteRootResource.putChild(b"docs", docSiteRoot)

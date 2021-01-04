@@ -15,27 +15,34 @@
 import logging
 
 from peek_platform.file_config.PeekFileConfigABC import PeekFileConfigABC
-from peek_platform.file_config.PeekFileConfigDocBuildMixin import \
-    PeekFileConfigDocBuildMixin
-from peek_platform.file_config.PeekFileConfigFrontendDirMixin import \
-    PeekFileConfigFrontendDirMixin
-from peek_platform.file_config.PeekFileConfigHttpServerMixin import \
-    PeekFileConfigHttpMixin
+from peek_platform.file_config.PeekFileConfigDocBuildMixin import (
+    PeekFileConfigDocBuildMixin,
+)
+from peek_platform.file_config.PeekFileConfigFrontendDirMixin import (
+    PeekFileConfigFrontendDirMixin,
+)
+from peek_platform.file_config.PeekFileConfigHttpServerMixin import (
+    PeekFileConfigHttpMixin,
+)
 from peek_platform.file_config.PeekFileConfigOsMixin import PeekFileConfigOsMixin
-from peek_platform.file_config.PeekFileConfigPeekServerClientMixin import \
-    PeekFileConfigPeekServerClientMixin
-from peek_platform.file_config.PeekFileConfigPlatformMixin import \
-    PeekFileConfigPlatformMixin
+from peek_platform.file_config.PeekFileConfigPeekServerClientMixin import (
+    PeekFileConfigPeekServerClientMixin,
+)
+from peek_platform.file_config.PeekFileConfigPlatformMixin import (
+    PeekFileConfigPlatformMixin,
+)
 
 logger = logging.getLogger(__name__)
 
 
-class PeekClientConfig(PeekFileConfigABC,
-                       PeekFileConfigPeekServerClientMixin,
-                       PeekFileConfigPlatformMixin,
-                       PeekFileConfigOsMixin,
-                       PeekFileConfigFrontendDirMixin,
-                       PeekFileConfigDocBuildMixin):
+class PeekClientConfig(
+    PeekFileConfigABC,
+    PeekFileConfigPeekServerClientMixin,
+    PeekFileConfigPlatformMixin,
+    PeekFileConfigOsMixin,
+    PeekFileConfigFrontendDirMixin,
+    PeekFileConfigDocBuildMixin,
+):
     """
     This class creates a basic client configuration
     """
