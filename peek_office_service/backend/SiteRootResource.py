@@ -1,10 +1,22 @@
 import os
 
+from twisted.web.util import Redirect
+
 from peek_platform import PeekPlatformConfig
 from txhttputil.site.FileUnderlayResource import FileUnderlayResource
 from vortex.VortexFactory import VortexFactory
 
-officeRoot = FileUnderlayResource()
+
+class OfficeRootResource(FileUnderlayResource):
+    DOC_LINKS = {b"/docs", b"/doc", b"/help", b"/documentation"}
+
+    def getChild(self, path, request):
+        if request.uri in self.DOC_LINKS:
+            return Redirect(b"/docs/")
+        return super().getChild(path, request)
+
+
+officeRoot = OfficeRootResource()
 
 
 def setupOffice():
