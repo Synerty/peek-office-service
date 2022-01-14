@@ -8,14 +8,14 @@ from txhttputil.site.SiteUtil import RedirectionRule
 from vortex.VortexFactory import VortexFactory
 
 docSitePrefix = "/docs/"
-officeRoot = FileUnderlayResource(
-    redirections=[
-        RedirectionRule("/docs", docSitePrefix),
-        RedirectionRule("/doc", docSitePrefix),
-        RedirectionRule("/help", docSitePrefix),
-        RedirectionRule("/documentation", docSitePrefix),
-    ]
-)
+officeRoot = FileUnderlayResource()
+for r in [
+    RedirectionRule("/docs", docSitePrefix),
+    RedirectionRule("/doc", docSitePrefix),
+    RedirectionRule("/help", docSitePrefix),
+    RedirectionRule("/documentation", docSitePrefix),
+]:
+    officeRoot.addRedirectionRule(r)
 
 
 def setupOffice():
