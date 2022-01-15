@@ -4,7 +4,6 @@
 __pycache__
 
 # Ignore pycharm project settings
-.idea
 
 dist/
 build/
@@ -21,7 +20,6 @@ build/
 /bower_components
 
 # IDEs and editors
-/.idea
 /.vscode
 .project
 .classpath
@@ -47,7 +45,6 @@ testem.log
 Thumbs.db
 
 # Ignore pycharm project files
-.idea/
 
 MANIFEST
 
