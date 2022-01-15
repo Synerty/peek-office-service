@@ -17,7 +17,7 @@ from peek_platform.util.LogUtil import (
     setupLoggingToSysloyServer,
 )
 from peek_plugin_base.PeekVortexUtil import peekOfficeName, peekServerName
-from pytmpdir.Directory import DirSettings
+from pytmpdir.dir_setting import DirSetting
 from txhttputil.site.FileUploadRequest import FileUploadRequest
 from txhttputil.site.SiteUtil import setupSite
 from vortex.DeferUtil import vortexLogFailure
@@ -52,7 +52,9 @@ def setupPlatform():
     PeekPlatformConfig.pluginSwInstallManager = PluginSwInstallManager()
 
     # Tell the platform classes about our instance of the PeekSwInstallManager
-    from peek_office_service.sw_install.PeekSwInstallManager import PeekSwInstallManager
+    from peek_office_service.sw_install.PeekSwInstallManager import (
+        PeekSwInstallManager,
+    )
 
     PeekPlatformConfig.peekSwInstallManager = PeekSwInstallManager()
 
@@ -101,11 +103,13 @@ def setupPlatform():
         )
 
     # Set the reactor thread count
-    reactor.suggestThreadPoolSize(PeekPlatformConfig.config.twistedThreadPoolSize)
+    reactor.suggestThreadPoolSize(
+        PeekPlatformConfig.config.twistedThreadPoolSize
+    )
 
     # Initialise the txhttputil Directory object
-    DirSettings.defaultDirChmod = PeekPlatformConfig.config.DEFAULT_DIR_CHMOD
-    DirSettings.tmpDirPath = PeekPlatformConfig.config.tmpPath
+    DirSetting.defaultDirChmod = PeekPlatformConfig.config.DEFAULT_DIR_CHMOD
+    DirSetting.tmpDirPath = PeekPlatformConfig.config.tmpPath
     FileUploadRequest.tmpFilePath = PeekPlatformConfig.config.tmpPath
 
 
@@ -158,16 +162,23 @@ def main():
     # Load all Plugins
     d.addErrback(vortexLogFailure, logger, consumeError=True)
     d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadCorePlugins())
-    d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadOptionalPlugins())
+    d.addCallback(
+        lambda _: PeekPlatformConfig.pluginLoader.loadOptionalPlugins()
+    )
 
     d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.startCorePlugins())
-    d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.startOptionalPlugins())
+    d.addCallback(
+        lambda _: PeekPlatformConfig.pluginLoader.startOptionalPlugins()
+    )
 
     # Set this up after the plugins have loaded, it causes problems with the ng build
     d.addCallback(lambda _: setupVortexOfflineSubscriber())
 
     def startSite(_):
-        from peek_office_service.backend.SiteRootResource import setupOffice, officeRoot
+        from peek_office_service.backend.SiteRootResource import (
+            setupOffice,
+            officeRoot,
+        )
 
         setupOffice()
 
@@ -195,14 +206,18 @@ def main():
     d.addCallback(startedSuccessfully)
 
     reactor.addSystemEventTrigger(
-        "before", "shutdown", PeekPlatformConfig.pluginLoader.stopOptionalPlugins
+        "before",
+        "shutdown",
+        PeekPlatformConfig.pluginLoader.stopOptionalPlugins,
     )
     reactor.addSystemEventTrigger(
         "before", "shutdown", PeekPlatformConfig.pluginLoader.stopCorePlugins
     )
 
     reactor.addSystemEventTrigger(
-        "before", "shutdown", PeekPlatformConfig.pluginLoader.unloadOptionalPlugins
+        "before",
+        "shutdown",
+        PeekPlatformConfig.pluginLoader.unloadOptionalPlugins,
     )
     reactor.addSystemEventTrigger(
         "before", "shutdown", PeekPlatformConfig.pluginLoader.unloadCorePlugins
