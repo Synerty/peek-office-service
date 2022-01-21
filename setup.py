@@ -66,7 +66,7 @@ requirements = [
     "peek-plugin-base",
     "peek-platform",
     "peek-office-app",
-    "peek-field-doc",
+    "peek-office-doc",
 ]
 
 # Force the dependencies to be the same branch
