@@ -4,7 +4,7 @@ from twisted.web.util import Redirect
 
 from peek_platform import PeekPlatformConfig
 from txhttputil.site.FileUnderlayResource import FileUnderlayResource
-from txhttputil.site.SiteUtil import RedirectionRule
+from txhttputil.site.RedirectionRule import RedirectionRule
 
 from vortex.VortexFactory import VortexFactory
 
