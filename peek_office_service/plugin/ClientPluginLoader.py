@@ -6,10 +6,14 @@ from twisted.internet.defer import inlineCallbacks
 from peek_office_service.plugin.ClientFrontendBuildersMixin import (
     ClientFrontendBuildersMixin,
 )
-from peek_office_service.plugin.PeekClientPlatformHook import PeekClientPlatformHook
+from peek_office_service.plugin.PeekClientPlatformHook import (
+    PeekClientPlatformHook,
+)
 from peek_platform.plugin.PluginLoaderABC import PluginLoaderABC
 from peek_plugin_base.PluginCommonEntryHookABC import PluginCommonEntryHookABC
-from peek_plugin_base.client.PluginClientEntryHookABC import PluginClientEntryHookABC
+from peek_plugin_base.client.PluginClientEntryHookABC import (
+    PluginClientEntryHookABC,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -43,9 +47,7 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
     def loadOptionalPlugins(self):
         yield PluginLoaderABC.loadOptionalPlugins(self)
 
-        yield from self._buildMobile(self._loadedPlugins.values())
-
-        yield from self._buildDesktop(self._loadedPlugins.values())
+        yield from self._buildWebApp(self._loadedPlugins.values())
 
         yield from self._buildDocs(self._loadedPlugins.values())
 
@@ -72,7 +74,9 @@ class ClientPluginLoader(PluginLoaderABC, ClientFrontendBuildersMixin):
         platformApi = PeekClientPlatformHook(pluginName)
 
         pluginMain = EntryHookClass(
-            pluginName=pluginName, pluginRootDir=pluginRootDir, platform=platformApi
+            pluginName=pluginName,
+            pluginRootDir=pluginRootDir,
+            platform=platformApi,
         )
 
         # Load the plugin
