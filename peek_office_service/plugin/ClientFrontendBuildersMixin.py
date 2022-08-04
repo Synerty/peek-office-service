@@ -2,8 +2,8 @@ import logging
 
 import os
 
-from peek_platform.build_doc.DocBuilder import DocBuilder
-from peek_platform.build_frontend.WebBuilder import WebBuilder
+from peek_plugin_base.util.build_doc.DocBuilder import DocBuilder
+from peek_plugin_base.util.build_frontend.WebBuilder import WebBuilder
 
 logger = logging.getLogger(__name__)
 
