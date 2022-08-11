@@ -2,7 +2,9 @@ from pathlib import Path
 from typing import Optional
 
 from peek_platform import PeekPlatformConfig
-from peek_plugin_base.client.PeekClientPlatformHookABC import PeekClientPlatformHookABC
+from peek_plugin_base.client.PeekClientPlatformHookABC import (
+    PeekClientPlatformHookABC,
+)
 from peek_plugin_base.client.PeekPlatformOfficeHttpHookABC import (
     PeekPlatformOfficeHttpHookABC,
 )
@@ -57,3 +59,31 @@ class PeekClientPlatformHook(PeekClientPlatformHookABC):
         from peek_platform import PeekPlatformConfig
 
         return PeekPlatformConfig.config.peekServerHost
+
+    @property
+    def peekServerSSL(self) -> bool:
+        from peek_platform import PeekPlatformConfig
+
+        return PeekPlatformConfig.config.peekServerSSL
+
+    @property
+    def peekServerSSLEnableMutualTLS(self) -> bool:
+        from peek_platform import PeekPlatformConfig
+
+        return PeekPlatformConfig.config.peekServerSSLEnableMutualTLS
+
+    @property
+    def peekServerSSLClientBundleFilePath(self) -> str:
+        from peek_platform import PeekPlatformConfig
+
+        return PeekPlatformConfig.config.peekServerSSLClientBundleFilePath
+
+    @property
+    def peekServerSSLClientMutualTLSCertificateAuthorityBundleFilePath(
+        self,
+    ) -> str:
+        from peek_platform import PeekPlatformConfig
+
+        return (
+            PeekPlatformConfig.config.peekServerSSLClientMutualTLSCertificateAuthorityBundleFilePath
+        )
