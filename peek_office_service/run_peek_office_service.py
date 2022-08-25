@@ -157,7 +157,6 @@ def main():
     host = dataExchangeCfg.peekServerHost
     port = dataExchangeCfg.peekServerHttpPort
 
-    # TODO: use http client with websocket upgrade
     d = VortexFactory.createWebsocketClient(
         PeekPlatformConfig.componentName,
         host,
