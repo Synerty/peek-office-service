@@ -52,31 +52,35 @@ class PeekClientPlatformHook(PeekClientPlatformHookABC):
     def peekServerHttpPort(self) -> int:
         from peek_platform import PeekPlatformConfig
 
-        return PeekPlatformConfig.config.peekServerHttpPort
+        return PeekPlatformConfig.config.dataExchange.peekServerHttpPort
 
     @property
     def peekServerHost(self) -> str:
         from peek_platform import PeekPlatformConfig
 
-        return PeekPlatformConfig.config.peekServerHost
+        return PeekPlatformConfig.config.dataExchange.peekServerHost
 
     @property
     def peekServerSSL(self) -> bool:
         from peek_platform import PeekPlatformConfig
 
-        return PeekPlatformConfig.config.peekServerSSL
+        return PeekPlatformConfig.config.dataExchange.peekServerUseSSL
 
     @property
     def peekServerSSLEnableMutualTLS(self) -> bool:
         from peek_platform import PeekPlatformConfig
 
-        return PeekPlatformConfig.config.peekServerSSLEnableMutualTLS
+        return (
+            PeekPlatformConfig.config.dataExchange.peekServerSSLEnableMutualTLS
+        )
 
     @property
     def peekServerSSLClientBundleFilePath(self) -> str:
         from peek_platform import PeekPlatformConfig
 
-        return PeekPlatformConfig.config.peekServerSSLClientBundleFilePath
+        return (
+            PeekPlatformConfig.config.dataExchange.peekServerSSLClientBundleFilePath
+        )
 
     @property
     def peekServerSSLClientMutualTLSCertificateAuthorityBundleFilePath(
@@ -85,5 +89,13 @@ class PeekClientPlatformHook(PeekClientPlatformHookABC):
         from peek_platform import PeekPlatformConfig
 
         return (
-            PeekPlatformConfig.config.peekServerSSLClientMutualTLSCertificateAuthorityBundleFilePath
+            PeekPlatformConfig.config.dataExchange.peekServerSSLClientMutualTLSCertificateAuthorityBundleFilePath
+        )
+
+    @property
+    def peekServerSSLMutualTLSTrustedPeerCertificateBundleFilePath(self) -> str:
+        from peek_platform import PeekPlatformConfig
+
+        return (
+            PeekPlatformConfig.config.dataExchange.peekServerSSLMutualTLSTrustedPeerCertificateBundleFilePath
         )

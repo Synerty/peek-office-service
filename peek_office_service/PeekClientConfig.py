@@ -24,9 +24,11 @@ from peek_platform.file_config.PeekFileConfigFrontendDirMixin import (
 from peek_platform.file_config.PeekFileConfigHttpServerMixin import (
     PeekFileConfigHttpMixin,
 )
-from peek_platform.file_config.PeekFileConfigOsMixin import PeekFileConfigOsMixin
-from peek_platform.file_config.PeekFileConfigPeekServerClientMixin import (
-    PeekFileConfigPeekServerClientMixin,
+from peek_platform.file_config.PeekFileConfigOsMixin import (
+    PeekFileConfigOsMixin,
+)
+from peek_platform.file_config.PeekFileConfigDataExchangeClientMixin import (
+    PeekFileConfigDataExchangeClientMixin,
 )
 from peek_platform.file_config.PeekFileConfigPlatformMixin import (
     PeekFileConfigPlatformMixin,
@@ -37,7 +39,6 @@ logger = logging.getLogger(__name__)
 
 class PeekClientConfig(
     PeekFileConfigABC,
-    PeekFileConfigPeekServerClientMixin,
     PeekFileConfigPlatformMixin,
     PeekFileConfigOsMixin,
     PeekFileConfigFrontendDirMixin,
@@ -50,3 +51,4 @@ class PeekClientConfig(
     def __init__(self):
         super().__init__()
         self.officeHttpServer = PeekFileConfigHttpMixin(self, "office", 8002)
+        self.dataExchange = PeekFileConfigDataExchangeClientMixin(self)
