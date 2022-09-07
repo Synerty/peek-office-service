@@ -203,14 +203,15 @@ def main():
         setupOffice()
 
         # Create the desktop vortex server
-        officeHttpServer = PeekPlatformConfig.config.officeHttpServer
+        httpServerConfig = PeekPlatformConfig.config.officeHttpServer
         setupSite(
             "Peek Office Site",
             officeRoot,
-            portNum=officeHttpServer.sitePort,
+            portNum=httpServerConfig.sitePort,
             enableLogin=False,
-            redirectFromHttpPort=officeHttpServer.redirectFromHttpPort,
-            sslBundleFilePath=officeHttpServer.sslBundleFilePath,
+            redirectFromHttpPort=httpServerConfig.redirectFromHttpPort,
+            sslBundleFilePath=httpServerConfig.sslBundleFilePath,
+            enableSsl=httpServerConfig.useSsl,
         )
 
     d.addCallback(startSite)
