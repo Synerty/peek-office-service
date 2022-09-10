@@ -11,6 +11,7 @@
  *  Synerty Pty Ltd
  *
 """
+from peek_platform.platform_init.init_platform import InitPlatform
 from peek_platform.util.LogUtil import (
     setupPeekLogger,
     updatePeekLoggerHandlers,
@@ -40,95 +41,17 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def setupPlatform():
-    from peek_platform import PeekPlatformConfig
-
-    PeekPlatformConfig.componentName = peekOfficeName
-
-    # Tell the platform classes about our instance of the PluginSwInstallManager
-    from peek_office_service.sw_install.PluginSwInstallManager import (
-        PluginSwInstallManager,
-    )
-
-    PeekPlatformConfig.pluginSwInstallManager = PluginSwInstallManager()
-
-    # Tell the platform classes about our instance of the PeekSwInstallManager
-    from peek_office_service.sw_install.PeekSwInstallManager import (
-        PeekSwInstallManager,
-    )
-
-    PeekPlatformConfig.peekSwInstallManager = PeekSwInstallManager()
-
-    # Tell the platform classes about our instance of the PeekLoaderBase
-    from peek_office_service.plugin.ClientPluginLoader import ClientPluginLoader
-
-    PeekPlatformConfig.pluginLoader = ClientPluginLoader()
-
-    # The config depends on the componentName, order is important
-    from peek_office_service.PeekClientConfig import PeekClientConfig
-
-    PeekPlatformConfig.config = PeekClientConfig()
-
-    # Update the version in the config file
-    from peek_office_service import __version__
-
-    PeekPlatformConfig.config.platformVersion = __version__
-
-    # Set default logging level
-    logging.root.setLevel(PeekPlatformConfig.config.loggingLevel)
-    updatePeekLoggerHandlers(
-        PeekPlatformConfig.componentName,
-        PeekPlatformConfig.config.daysToKeep,
-        PeekPlatformConfig.config.logToStdout,
-    )
-
-    if PeekPlatformConfig.config.loggingLogToSyslogHost:
-        setupLoggingToSyslogServer(
-            PeekPlatformConfig.config.loggingLogToSyslogHost,
-            PeekPlatformConfig.config.loggingLogToSyslogPort,
-            PeekPlatformConfig.config.loggingLogToSyslogFacility,
-        )
-
-    # Enable deferred debugging if DEBUG is on.
-    if logging.root.level == logging.DEBUG:
-        defer.setDebugging(True)
-
-    # If we need to enable memory debugging, turn that on.
-    if PeekPlatformConfig.config.loggingDebugMemoryMask:
-        from peek_platform.util.MemUtil import setupMemoryDebugging
-
-        setupMemoryDebugging(
-            PeekPlatformConfig.componentName,
-            PeekPlatformConfig.config.loggingDebugMemoryMask,
-        )
-
-    # Set the reactor thread count
-    reactor.suggestThreadPoolSize(
-        PeekPlatformConfig.config.twistedThreadPoolSize
-    )
-
-    # Initialise the txhttputil Directory object
-    DirSetting.defaultDirChmod = PeekPlatformConfig.config.DEFAULT_DIR_CHMOD
-    DirSetting.tmpDirPath = PeekPlatformConfig.config.tmpPath
-    FileUploadRequest.tmpFilePath = PeekPlatformConfig.config.tmpPath
-
-    # Setup manhole
-    if PeekPlatformConfig.config.manholeEnabled:
-        start_manhole(
-            PeekPlatformConfig.config.manholePort,
-            PeekPlatformConfig.config.manholePassword,
-            PeekPlatformConfig.config.manholePublicKeyFile,
-            PeekPlatformConfig.config.manholePrivateKeyFile,
-        )
-
-
 def main():
     # defer.setDebugging(True)
     # sys.argv.remove(DEBUG_ARG)
     # import pydevd
     # pydevd.settrace(suspend=False)
 
-    setupPlatform()
+    from peek_platform import PeekPlatformConfig
+
+    platformIniter = InitPlatform(peekOfficeName)
+
+    platformIniter.setupPlatform()
 
     # Import remaining components
     from peek_office_service import importPackages
@@ -147,26 +70,6 @@ def main():
         .subscribe(on_next=restart)
     )
 
-    # First, setup the VortexServer Agent
-    from peek_platform import PeekPlatformConfig
-
-    dataExchangeCfg = PeekPlatformConfig.config.dataExchange
-
-    scheme = "wss" if dataExchangeCfg.peekServerUseSSL else "ws"
-    host = dataExchangeCfg.peekServerHost
-    port = dataExchangeCfg.peekServerHttpPort
-
-    d = VortexFactory.createWebsocketClient(
-        PeekPlatformConfig.componentName,
-        host,
-        port,
-        url=f"{scheme}://{host}:{port}/vortexws",
-        sslEnableMutualTLS=dataExchangeCfg.peekServerSSLEnableMutualTLS,
-        sslClientCertificateBundleFilePath=dataExchangeCfg.peekServerSSLClientBundleFilePath,
-        sslMutualTLSCertificateAuthorityBundleFilePath=dataExchangeCfg.peekServerSSLClientMutualTLSCertificateAuthorityBundleFilePath,
-        sslMutualTLSTrustedPeerCertificateBundleFilePath=dataExchangeCfg.peekServerSSLMutualTLSTrustedPeerCertificateBundleFilePath,
-    )
-
     # Start Update Handler,
     # Add both, The peek client might fail to connect, and if it does, the payload
     # sent from the peekSwUpdater will be queued and sent when it does connect.
@@ -179,16 +82,8 @@ def main():
     # (Initialised now, not as a callback)
 
     # Load all Plugins
-    d.addErrback(vortexLogFailure, logger, consumeError=True)
-    d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.loadCorePlugins())
-    d.addCallback(
-        lambda _: PeekPlatformConfig.pluginLoader.loadOptionalPlugins()
-    )
-
-    d.addCallback(lambda _: PeekPlatformConfig.pluginLoader.startCorePlugins())
-    d.addCallback(
-        lambda _: PeekPlatformConfig.pluginLoader.startOptionalPlugins()
-    )
+    d = platformIniter.connectVortexClient()
+    d.addCallback(lambda _: platformIniter.loadAndStartupPlugins())
 
     def startSite(_):
         from peek_office_service.backend.SiteRootResource import (
@@ -224,24 +119,8 @@ def main():
     d.addCallback(startedSuccessfully)
 
     reactor.addSystemEventTrigger(
-        "before",
-        "shutdown",
-        PeekPlatformConfig.pluginLoader.stopOptionalPlugins,
+        "before", "shutdown", platformIniter.stopAndShutdownPluginsAndVortex
     )
-    reactor.addSystemEventTrigger(
-        "before", "shutdown", PeekPlatformConfig.pluginLoader.stopCorePlugins
-    )
-
-    reactor.addSystemEventTrigger(
-        "before",
-        "shutdown",
-        PeekPlatformConfig.pluginLoader.unloadOptionalPlugins,
-    )
-    reactor.addSystemEventTrigger(
-        "before", "shutdown", PeekPlatformConfig.pluginLoader.unloadCorePlugins
-    )
-
-    reactor.addSystemEventTrigger("before", "shutdown", VortexFactory.shutdown)
 
     reactor.run()
 
