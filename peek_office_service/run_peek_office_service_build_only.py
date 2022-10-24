@@ -12,6 +12,7 @@
  *
 """
 from pytmpdir.dir_setting import DirSetting
+from setproctitle import setproctitle
 
 from peek_plugin_base.PeekVortexUtil import peekOfficeName
 from txhttputil.site.FileUploadRequest import FileUploadRequest
@@ -42,6 +43,7 @@ from peek_platform import PeekPlatformConfig
 
 def setupPlatform():
     PeekPlatformConfig.componentName = peekOfficeName
+    setproctitle(PeekPlatformConfig.componentName + " build_only")
 
     # Tell the platform classes about our instance of the PluginSwInstallManager
     from peek_office_service.sw_install.PluginSwInstallManager import (
