@@ -95,6 +95,11 @@ def main():
 
         # Create the desktop vortex server
         httpServerConfig = PeekPlatformConfig.config.officeHttpServer
+
+        VortexFactory.setPeerConnectionLimitPerIp(
+            httpServerConfig.concurrentPeerIpConnectionLimit
+        )
+
         setupSite(
             "Peek Office Site",
             officeRoot,
