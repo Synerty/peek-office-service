@@ -50,9 +50,6 @@ def addVortexServers(siteRootResource):
         PeekPlatformConfig.componentName, siteRootResource
     )
 
-    # Add a HTTP vortex
-    # VortexFactory.createServer(PeekPlatformConfig.componentName, siteRootResource)
-
 
 def addDocSite(siteRootResource):
     # Setup properties for serving the site
